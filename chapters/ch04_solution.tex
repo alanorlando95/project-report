@@ -3,9 +3,23 @@
 \begin{document}
     \chapter{Solution}
 
-    Your main contributions go here
+    Due to the different sources of data and the time by which this was provided, we propose two similar but different solutions to solve this problem.
+    The core part of the proposed solutions is a Linear Programming method and they differ in the preprocessing of the data.
+
+    The solution to the problem is to implement the algorithm presented by \cite{Goebbels_2018_linebased} 
+    
+    - Due to poor data availability, a (deep) learning method is unthinkable to solve the problem: there is not enough data to train a model. \par
+    
 
     \section{Proposed algorithm}
+    - The main steps of the algorithm are listed as follows: \par
+    - Project the point cloud into the XY plane \par
+    - Project the corners of the CityGML Model onto the XY plane \par
+    - Identify the corners in the projection of the point cloud onto the XY-plane \par
+    - Use Linear Programming to find a transformation that best aligns both projections onto the XY-plane \par
 
     \section{Implementation details}
+    - Math
+    - Code
+
 \end{document}
