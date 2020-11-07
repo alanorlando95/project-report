@@ -20,12 +20,15 @@
         \subsection{Global methods}
 
         RANSAC \cite{Fischler_1981_RANSAC} can also be used to perform the registration task but is time-consuming due to the randomness
-        of the RANSAC algorithm. Therefore, S. Quan and J. Yang \cite{Quan_2020_com} propose a method that helps the RANSAC algorithm 
+        of the RANSAC algorithm. Therefore, Pankaj et al. \cite{Pankaj_2015_arobust} present a guided sampling improvement to RANSAC,
+        to reduce the registration time, sorting the correspondences obtained from a previous 3D feature matching according to its quality.
+        
+        Following the same line, S. Quan and J. Yang \cite{Quan_2020_com} propose a method that helps the RANSAC algorithm 
         sampling the best point correspondences. Their approach first detects keypoints using Harris3D, then it matches the keypoints
         by using the Local Voxelized Structure (LoVS) descriptor. After that, the set of correspondences is reduced using the 
         Nearest Neighbor Similarity Ration (NNSR) and the compatibility score of the remaining correspondences with the rigidity and 
         DSP constraint. Finally, the correspondences with the best compatibility scores are using to generate transformations and 
-        the best one (the one with the maximum number of inliers) is the final result. 
+        the best one (the one with the maximum number of inliers) is the final result. Unfortunately, the RANSAC-based approaches are sensitive to outliers.
 
         Another less common approach for coarse registration is proposed by Sakakubara et al. \cite{Sakakubara_2007_automatic}.
         This coarse registration approach uses Mixed Integer Linear Programming to find pairs of corresponding points that are then 
@@ -74,7 +77,7 @@
         proved to be fast for big point clouds.
 
     \section{Point-to-model registration}
-    
+
         \subsection{Sampling methods}
         In order to register a 3D model with a point cloud, the simpliest idea is to sample points from the 3D model to generate a second point cloud
         and then perform one of the point-to-point registration methods. 
