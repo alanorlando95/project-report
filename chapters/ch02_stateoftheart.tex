@@ -38,16 +38,52 @@
         it finds the best correspondences between the points.
         Nevertheless, Mixed Integer Linear Programming problems are NP-hard. Therefore, this approach is excessively time-consuming.
 
+        Others have proposed the use of neural networks to attempt to solve the global registration problem.
+        This is the case of Wang and Solomon \cite{Wang_2019_deepclosest}. They propose a learning-based method called Deep Closest Point (DCP).
+        The approach proposed first uses PointNet \cite{Qi_2017_pointnetdeep} or DGCNN \cite{Wang_2019_dynamic} to embed the point clouds.
+        Then, it uses an attention-based module to encode the output of the first part.
+        Finally, it estimate the transformation using a differentiable SVD layer.
+
+        Ding and Feng \cite{Ding_2019_deepmapping} present another deep learning method called DeepMapping,
+        whose main structure is constituted of two deep neural networks.
+        The first network is a localization network, whose output is the pose estimation for the input point clouds.
+        And the second network is a map network that estimates the occupancy status of the input locations to compute a loss function that reveals
+        the registration quality.
+
+        More recently, Huang et al. \cite{Huang_2020_feature} propose a learning method that can be trained in a semi-supervised or unsupervised way.
+        The proposed framework is composed of an encoder, that extracts features from the input point clouds, 
+        and a decoder that decodes the extracted features to compute a projection error that serves as input for an algorithm that estimates
+        a transformation increment. 
+        This increment is then employed to update the parameters of the transformation and transform one of the point clouds.
+        The whole process is repeated until the loss computed is less than some desired value.
+    
+
+
         \subsection{Local methods}
 
         Besl and N. D. McKay \cite{Besl_1992_amethod} propose the Iterative Closest Point (ICP) algorithm to perform registration 
         between point sets, line segments, implicit curves, parametric curves, triangles, implicit surfaces, and parametric surfaces.
         ICP iteratively finds and updates correspondences between the desired sets based on an initial approximation to the solution and 
         the spatial distance.
-        ICP is still the standard algorithm for point cloud registration. However, to perform well it requires a good initial
-        approximation of the solution.
+
+        According to Segal et al. \cite{Segal_2009_generalizedicp}, the ICP algorithm can be summarized in two main steps:
+        the computation of correspondences between the two scans and 
+        the computation of a transformation that minimizes the distance between corresponding points.
+        They present a generalized version of the ICP algorithm by attaching a probabilistic model to the second step.
+        This generalization makes the algorithm more robust to outliers without modifying the simplicity. 
+        However, it does not improve the speed of the original ICP.
+
+        ICP and its variants are still the standard algorithms for point cloud registration because of their simplicity. 
+        Nevertheless, to perform well they require a good initial approximation of the solution.
 
         \subsection{Hybrid methods}
+
+        The results of the global methods can be refined with the use of a local method, most of the time a variation of the popular ICP.
+        In this category, some of these methods can be found.
+
+        Go-ICP is a branch-and-bound (BnB) based approach proposed by Yang et al. \cite{Yang_2016_goicp} to address the susceptibility of ICP to local minima. 
+        The main idea of Go-ICP is that BnB and ICP work iteratively until a global minimum is reached: BnB finds a solution and this is refined by ICP.
+        Go-ICP guarantees global optimality regardless of the initialization and it is recommended for scenarios where real-time performance is not critical.
 
         The approach proposed by Jun Lu et al. \cite{Lu_2019_4pcsicp} obtains a consistent four-point set by using Super4PCS \cite{Mellado_2014_super4pcs}, 
         then it creates a neighborhood ball with each point as the center and obtains the overlapping regions as the intersections
@@ -55,10 +91,10 @@
         there should exist overlapping regions in order to perform the registration task.
 
         Because of the increasing success of Deep Learning in 2D applications, there have been attempts to use deep neural networks
-        to solve the point cloud registration problem.
+        to solve the complete point cloud registration problem (global and local registration).
         DeepICP \cite{Lu_2019_deepicp} is the first end-to-end learning-based point cloud registration framework.
         DeepICP makes use of other networks to build a complete framework.
-        The first step of DeepICP is the Deep Feature Extraction (PointNet+ \cite{Qi_2017_pointnet}), which extracts features from the point clouds.
+        The first step of DeepICP is the Deep Feature Extraction (PointNet++ \cite{Qi_2017_pointnet}), which extracts features from the point clouds.
         In the second step, the Pont Weighting (3DFeatNet \cite{Yew_2018_3dfeat}) selects the relevant points.
         In the third step, the selected points of the target point cloud are sampled using the initial transformations.
         In the fourth step, Deep Feature Embedding is used to obtain more specific descriptors of the points.
@@ -79,6 +115,7 @@
     \section{Point-to-model registration}
 
         \subsection{Sampling methods}
+
         In order to register a 3D model with a point cloud, the simpliest idea is to sample points from the 3D model to generate a second point cloud
         and then perform one of the point-to-point registration methods. 
 
@@ -97,7 +134,7 @@
 
         Other approaches work directly with the information provided in the 3D models to perform the registration task.
 
-        Li and Song \cite{Li_2015_amodified} propose two extensions to the most popular local registration method, the Iterative Closest Point (ICP) algorithm, 
+        Li and Song \cite{Li_2015_amodified} propose two extensions to the most popular local registration method, the ICP algorithm, 
         to be able to use it with an STL-file (3D model) and a point cloud.
         The first of these extensions is called ICP-STL, and its main modification consists of finding the corresponding triangle mesh of the STL file of the points 
         in the point cloud, and then the closest point in the triangle mesh to each point of the point cloud. The rest of the ICP algorithm remains the same.
@@ -105,7 +142,7 @@
         ICP-DAF adds a dynamic adjustment factor to adjust the transformation parameters dinamically.
         The disadvantage of this method is the same disadvantage present in the ICP algorithm, to perform well it requires a good initial approximation of the solution.
 
-        In the specific case of CityGML, \cite{Goebbels_2019_icpcitygml} proposes an extension of the well-known Iterative Closest Point algorithm (ICP) 
+        In the specific case of CityGML, Goebbels et al. \cite{Goebbels_2019_icpcitygml} propose an extension of the well-known ICP
         to perform point-to-model registration based on the point-to-plane registration.
         This approach only considers points on the perimeter of the buildings.
         The main contribution of this approach is the speed. Point-to-model ICP is faster than the point-to-plane ICP.
@@ -135,5 +172,7 @@
         - They does not offer a concrete solution for the coarse registration of a model with a point cloud. \par
         - The sampling of a model to obtain a point cloud and then register it with another point cloud, do not leverage the information contained in the model. \par
         - To train a neural network for this is not an option due to the size of the dataset available for our project.
+        - ICP and its variants provide simple and easily-implemented iterative methods, but these
+        algorithms can converge to false local optima \cite{Wang_2019_deepclosest}.
 
 \end{document}
