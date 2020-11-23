@@ -2,87 +2,146 @@
 
 \begin{document}
     \chapter{Solution}
-    Due to causes unrelated to this project, the available data was just one CityGML model and its corresponding point cloud.
-    Therefore, a solution was designed based on this data and its characteristics.
+        Due to causes unrelated to this project, the available data was just one CityGML model and its corresponding point cloud.
+        Therefore, a solution was designed based on this data and its characteristics.
 
-    Later, in the middle phase of the project, another point cloud was available but its corresponding CityGML model was not.
-    However, instead of a CityGML model, a 3D model of the site was available in Polygon File Format (ply).
-    Because of the different information contained in the PLY file a different preprocessing was needed.
+        Later, in the middle phase of the project, another point cloud was available but its corresponding CityGML model was not.
+        However, instead of a CityGML model, a 3D model of the site was available in Polygon File Format (ply).
+        Because of the different information contained in the PLY file a different preprocessing was needed.
 
-    Although (deep) learning methods are very attractive due to their boom in recent years,
-    they are unthinkable to solve our problem. The main reason for this is the data needed to train such an approach.
+        Although (deep) learning methods are very attractive due to their boom in recent years,
+        they are unthinkable to solve our problem. The main reason for this is the data needed to train such an approach.
 
-    Goebbels et al. \cite{Goebbels_2018_linebased, Goebbels_2018_alinear} successfully propose the use of Mixed Integer Linear Programming to register
-    a point cloud with a CityGML model, based on lines and points.
-    Mixed Interger Linear Programming has been used to solve other registration problems
-    like the registration between two point clouds \cite{Sakakubara_2007_automatic},
-    registration between 3D shapes \cite{Windheuser_2011_largescale},
-    and 2D registration \cite{Bazin_2013_abranchandbound}.
+        Goebbels et al. \cite{Goebbels_2018_linebased, Goebbels_2018_alinear} successfully propose the use of Mixed Integer Linear Programming to register
+        a point cloud with a CityGML model, based on lines and points.
+        Mixed Interger Linear Programming has been used to solve other registration problems
+        like the registration between two point clouds \cite{Sakakubara_2007_automatic},
+        registration between 3D shapes \cite{Windheuser_2011_largescale},
+        and 2D registration \cite{Bazin_2013_abranchandbound}.
 
-    Therefore, the solution proposed is to detect the walls in the point cloud and the 3D model by projecting both onto the xy-plane,  
-    and then use the angles of the corners of the walls (where the walls intersect)
-    in an Integer Linear Program to find correspondences and a transformation that aligns the point cloud with the 3D Model at the same time.
-    The exact details are given in the next section.
+        Therefore, the solution proposed is to detect the walls in the point cloud and the 3D model by projecting both onto the xy-plane,  
+        and then use the angles of the corners of the walls (where the walls intersect)
+        in an Integer Linear Program to find correspondences and a transformation that aligns the point cloud with the 3D Model at the same time.
+        The exact details are given in the next section.
 
-    From now on, the point cloud could be referred to as the source, and the 3D model as the target.
+        From now on, the point cloud could be referred to as the source, and the 3D model as the target.
      
-
+%-------------------------------------------------------------------------------
+%	Proposed algorithm
+%-------------------------------------------------------------------------------
     \section{Proposed algorithm}
-    The main steps of the proposed algorithm are listed as follows:
-    \begin{enumerate}
-        \item Projection of the point cloud onto the xy-plane.
-        \item Projection of the 3D model onto the xy-plane.
-        \item Detection of lines.
-        \item Detection of line intersections and their angles.
-        \item Identification of possible correspondences between angles detected.
-        \item Alignment of both projections onto the xy-plane.
-        \item Translation across the z-axis.
-    \end{enumerate}
+        The main steps of the proposed algorithm are listed as follows:
+        \begin{enumerate}
+            \itemsep 0em 
+            \item Projection of the point cloud onto the xy-plane.
+            \item Projection of the 3D model onto the xy-plane.
+            \item Detection of line segments.
+            \item Detection of line intersections and their angles.
+            \item Identification of possible correspondences between angles detected.
+            \item Alignment of both projections onto the xy-plane.
+            \item Translation across the z-axis.
+        \end{enumerate}
 
-    \subsection{Projection of the point cloud onto the xy-plane}
-    \label{sub:Projection of the point cloud onto the xy-plane}
-        To simplify the registration task, this is transported from the 3D space to the 2D space.
-        The z-axis of the source and the target is already correctly aligned.
-        This allows for a direct projection of the source onto the xy-plane to detect walls.
+    %-------------------------------------------------------------------------------
+    %	Projection of the point cloud onto the xy-plane
+    %-------------------------------------------------------------------------------
+        \subsection{Projection of the point cloud onto the xy-plane}
+        \label{sub:Projection of the point cloud onto the xy-plane}
+            To simplify the registration task, one can transport it from the 3D space to the 2D space.
+            As we can see in Figure \ref{fig:initial_front_model} and Figure \ref{fig:initial_back_model}, 
+            the z-axis of the source and the target is already correctly aligned.
+            Which allows for a direct projection of the source onto the xy-plane to detect walls.
 
-    \subsection{Projection the 3D model onto the xy-plane}
-        The difference between the use of CityGML Models and the PLY models relies on their projection onto the xy-plane.
-        From the PLY model, a source is sampled and projected onto the xy-plane as described in \autoref{sub:Projection of the point cloud onto the xy-plane}.
+            \begin{figure}[H]
+                \includegraphics[width=\textwidth]{images/solution_images/source_image_inverted.png}
+                \caption{Projection of the source onto the xy-palne.}
+                \label{fig:source_image}
+            \end{figure}
+
+            To project the source onto the xy-plane, one can create an empty image with enough size for the source and the target to fit.
+            Then, one can sum the number of points in the source with the same x- and y-coordinates and write the result in the corresponding pixel in the image.
+            In this way, we can obtain a view of the source from bellow where line segments depict walls.
+            Figure \ref{fig:source_image} shows the image obtained after the projection of the source.
+            
+
+    %-------------------------------------------------------------------------------
+    %	Projection the 3D model onto the xy-plane
+    %-------------------------------------------------------------------------------
+        \subsection{Projection the 3D model onto the xy-plane}
+            \begin{figure}[H]
+                \includegraphics[width=\textwidth]{images/solution_images/target_image_inverted.png}
+                \caption{Projection of the target onto the xy-palne.}
+                \label{fig:target_image}
+            \end{figure}
+
+            The difference between using CityGML Models and the PLY models relies on their projection onto the xy-plane.
+            From the PLY model, a point cloud is sampled and projected onto the xy-plane as described in \autoref{sub:Projection of the point cloud onto the xy-plane}.
+
+            Fortunately, the CityGML model already provides a terrain intersection.
+            From this terrain intersection, only the x- and y-coordinates are used to make the projection.
+            In an empty image, line segments are drawn from point to point so that a footprint is obtained.
+
+            Figure \ref{fig:target_image} shows the image obtained after this process.
+
+            
+    %-------------------------------------------------------------------------------
+    %	Detection of line segments
+    %-------------------------------------------------------------------------------
+        \subsection{Detection of line segments}
+            \begin{figure}[H]
+                \includegraphics[width=\textwidth]{images/solution_images/filter_inverted.png}
+                \caption{source image after filter.}
+                \label{fig:source_image_filter}
+            \end{figure}
         
-        The CityGML model already provides a terrain intersection.
-        From this terrain intersection, only the x- and y-coordinates are used to make a projection onto the xy-plane.
-        Lines are drawn from point to point in such a way that a footprint is obtained.
+            The projections of the source and the target are now 2D images. 
+            The source image could be noisy, but the target is clear and the line segments that represent the walls are very well defined.
+            Therefore, to deal with the noise and remark the line segments of the source image an implementation of the technique proposed 
+            by Chaudhuri et al. \cite{Chaudhuri_1989_detection}, to detect blood vessels in retinal images, together with a binary threshold is used. 
+            The implementation of \cite{Chaudhuri_1989_detection} used is the one provided by DIPlib \cite{DIPlib_online}.
+            Figure \ref{fig:source_image_filter} shows the result after the filter is applied to Figure \ref{fig:source_image}.
 
-    \subsection{Detection of lines}
-        The projections of the source and the target are now 2D images. 
-        The source image could be noisy, but the target is clear and the lines that represent the walls are very well defined.
-        Therefore, to deal with the noise and remark the lines of the source image an implementation of the technique proposed 
-        by Chaudhuri et al. \cite{Chaudhuri_1989_detection}, to detect blood vessels in retinal images, together with a binary threshold is used. 
-        The implementation of \cite{Chaudhuri_1989_detection} used is the one provided by DIPlib \cite{DIPlib_online}.
+            Line segments in both images are detected using the probabilistic hough line transform of OpenCV \cite{opencv_library}.
+            The number of line segments is reduced in four steps. 
+            Firstly, short line segments are deleted, i.e. line segments with lengths lower than a given threshold.
+            Secondly, line segment s with similar slopes are identified. 
+            Then, from this set of line segments, subsets of line segments with close starting and ending points are created,
+            and only the longest one of each set is preserved. The rest of the line segments are deleted.
+            Thirdly, line segments with similar inclination angles are detected, and the same as in the second step is done.
+            Finally, line segments with similar angles that are too close are merged by eliminating or extending one of the line segments.
 
-        Lines in both images are detected using the probabilistic hough line transform of OpenCV \cite{opencv_library}.
-        The number of lines are reduced in three steps. 
-        Firstly, lines with similar angle of inclination are detected.
-        Secondly, from the lines that have a similar start and end position the longest one is preserved and the rest are deleted.
-        Thirdly, lines that are inside other lines are deleted too.
+    %-------------------------------------------------------------------------------
+    %	Detection of line intersections and their angles
+    %-------------------------------------------------------------------------------
+        \subsection{Detection of line intersections and their angles}
+            The line segments are converted to their homogeneous representation, 
+            and the intersections between them are calculated using the cross product as described in \cite{Hartley_2003_multiple_Book}.
+            Only the intersections that are in the line segments are taken into account.
+            Then, the angles of the intersections are computed.
 
-    \subsection{Detection of line intersections and their angles}
-        The lines are converted to the projective space and then cross product is used to detect the intersections between them.
-        Only the intersections that are in the segments are taken into account.
-        
-        The angle of the intersections is computed.
+    %-------------------------------------------------------------------------------
+    %	Identification of possible correspondences between angles detected
+    %-------------------------------------------------------------------------------
+        \subsection{Identification of possible correspondences between angles detected}
+            The angles of the intersections in the source image and the target image are compared,
+            and if they are similar to each other they are saved.
 
-    \subsection{Identification of possible correspondences between angles detected}
-        The angles of the intersections in the source image and the target image are compared,
-        and if they are similar to each other they are saved.
+    %-------------------------------------------------------------------------------
+    %	Alignment of both projections onto the xy-plane
+    %-------------------------------------------------------------------------------
+        \subsection{Alignment of both projections onto the xy-plane}
+            Therefore
 
-    \subsection{Alignment of both projections onto the xy-plane}
-        
+    %-------------------------------------------------------------------------------
+    %	Translation across the z-axis
+    %-------------------------------------------------------------------------------
+        \subsection{Translation across the z-axis}
+            From the correspondences found, the point in the terrain intersection is found and the lowest point in the point cloud.
 
-    \subsection{Translation across the z-axis}
-        From the correspondences found, the point in the terrain intersection is found and the lowest point in the point cloud.
-
+%-------------------------------------------------------------------------------
+%	Implementation details
+%-------------------------------------------------------------------------------
     \section{Implementation details}
-    - Math
+        - Math
 
 \end{document}

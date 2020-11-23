@@ -2,54 +2,100 @@
 
 \begin{document}
     \chapter{Methodology}
+        In this section, a brief description of the Data and the definition of the Registration Problem will be given.
+        The structure of a CityGML model is complex, and their complete explanation is out of the scope of this project,
+        For detailed information about CityGML please refer to Gröger et. al \cite{Groger_2012_OGC} or the official websites.
 
-    In this section, a brief description of the Data and the definition of the Registration Problem will be given.
-    The structure of a CityGML model is complex, and their complete explanation is out of the scope of this project,
-    For detailed information about CityGML please refer to Gröger et. al \cite{Groger_2012_OGC} or the official websites.
+%-------------------------------------------------------------------------------
+%	Data
+%-------------------------------------------------------------------------------
+    \section{Data}   
+        The CityGML models are public data in some states in Germany, for example in Nordrhein-Westfalen \cite{NRW3DModel_online}. 
+        Other states of Germany like Hessen \cite{Hessen3DModel_online} or Bayern \cite{Bayern3DModel_online} charge money for their Models.
+        That is not relevant for this project because the CityGML Models are received from the server of the A-DRZ project.
 
-    \section{Data}
-    The CityGML models are public data in some states in Germany, for example in Nordrhein-Westfalen \cite{NRW3DModel_online}. 
-    Other states of Germany like Hessen \cite{Hessen3DModel_online} or Bayern \cite{Bayern3DModel_online} charge money for their Models.
-    That is not relevant for this project because the CityGML Models are received from the server of the A-DRZ project.
-
-    Besides the representation of the building, CityGML models provide other interesting information about the buildings.
-    For this work, the intersection of the model with the terrain is the most relevant information.
-    The terrain intersection is provided as an array of 3D points that represent some points on the walls that intersect with the
-    ground. 
-    
-    The point cloud data is collected and provided by the A-DRZ project partners that develop and operate the actual Robots.
-    These are mainly the University of Bonn \cite{UniBonn_online} and the Technical University of Darmstadt \cite{TUDarmstadt_online},
-    which have integrated corresponding laser scanners and Lidar sensors on their platforms.    
-
-    Unfortunately, there is no ground truth of the data available. 
-    Therefore, the results are evaluated manually by a person who decides whether the registration was successful or not.
-
-    \section{Setup}
-    The main setup is depicted in Figure~\ref{fig:system_diagram}.
-    The input of the system is a CityGML model and its corresponding point cloud. 
-    The output of the registration algorithm is a transformation that aligns the point cloud with the CityGML model.
-    This transformation is then used to visualize the alignment of the input data for its proper evaluation.
-
-    \section{Registration Problem}
-    In general, the registration task consists of finding the transformation that aligns the input CityGML model with the input point cloud.
-
-    More specifically, given a source point set $P = \{p_i\}_{i=1}^N$, where $p_i \in \mathbb {R}^{3}$,
-    and a target point set $Q = \{q_j\}_{j=1}^M$, where $q_j \in \mathbb {R}^{3}$, 
-    the registration task consists of finding a transformation $T \in SE(3)$ that minimizes:
-    \begin{equation}
-        \label{eq:lossfunction}
-        \sum_{i = 1}^{N} \min_{j \in {1...M}} d( T p_i , q_j )    
-    \end{equation}
-      
-    where $d(T p_i, q_j)$ is the Euclidian distance between $H p_i$ and $q_j$.
-    In this case, the point set $P$ corresponds to the point cloud, while the point set $Q$ corresponds to the CityGML model.
-    It is clear that $P$ is formed by the same points that form the point cloud, 
-    but the set $Q$ could be a sampled point cloud from the CityGML model
-    or other characteristic points of the CityGML model.
-    
-    The difficulty of this task is to find correspondences between $P$ and $Q$ that minimizes eq. \ref{eq:lossfunction}.
-    If the correspondences were defined, the registration would be pretty straightforward and correct.
-
-    
+        Besides the representation of the building, CityGML models provide other interesting information about the buildings.
+        For this work, the intersection of the model with the terrain is the most relevant information.
+        The terrain intersection is provided as an array of 3D points that represent some points on the walls that intersect with the
+        ground. 
         
+        The point cloud data is collected and provided by the A-DRZ project partners that develop and operate the actual Robots.
+        These are mainly the University of Bonn \cite{UniBonn_online} and the Technical University of Darmstadt \cite{TUDarmstadt_online},
+        which have integrated corresponding laser scanners and Lidar sensors on their platforms.
+
+        Figure \ref{fig:initial_front_model} and Figure \ref{fig:initial_back_model} show a CityGML model and its corresponding point cloud
+        before being registered.
+            
+        Unfortunately, there is no ground truth for the registration of the data available. 
+        Therefore, the results are evaluated manually by a person who decides whether the registration was successful or not.
+
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth]{images/solution_images/initial_front_model.JPG}
+            \caption{Front view of a point cloud and a model before registration.}
+            \label{fig:initial_front_model}
+        \end{figure}
+      
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth]{images/solution_images/initial_back_model.JPG}
+            \caption{Back view of a point cloud and a model before registration.}
+            \label{fig:initial_back_model}
+        \end{figure}
+        
+        
+
+        % \begin{figure}
+        %     \begin{subfigure}{0.49\textwidth}
+        %       \includegraphics[width=\linewidth]{images/solution_images/initial_back_model_zoom.png}
+        %       \caption{Model as mesh.} \label{fig:initial_back_zoom_a}
+        %     \end{subfigure}%
+        %     \hspace*{\fill}   % maximize separation between the subfigures
+        %     \begin{subfigure}{0.49\textwidth}
+        %       \includegraphics[width=\linewidth]{images/solution_images/initial_back_lines_zoom.png}
+        %       \caption{Edges of the model as set of points.} \label{fig:initial_back_zoom_b}
+        %     \end{subfigure}%
+        %     \hspace*{\fill}   % maximizeseparation between the subfigures
+        %   \caption{Zoom into the back view.} \label{fig:initial_back_zoom}
+        % \end{figure}
+
+%-------------------------------------------------------------------------------
+%	Setup
+%-------------------------------------------------------------------------------
+    \section{Setup}
+        The main setup is depicted in Figure~\ref{fig:system_diagram}.
+        The input of the system is a CityGML model and its corresponding point cloud. 
+        The output of the registration algorithm is a transformation that aligns the point cloud with the CityGML model.
+        This transformation is then used to visualize the alignment of the input data for its proper evaluation.
+
+%-------------------------------------------------------------------------------
+%	Registration Problem in 3D
+%-------------------------------------------------------------------------------
+    \section{Registration Problem in 3D}
+        In general, the registration task consists of finding the transformation that aligns the input CityGML model with the input point cloud.
+
+        More specifically, given a source point set $P = \{p_i\}_{i=1}^N$, where $p_i \in \mathbb {R}^{3}$,
+        and a target point set $Q = \{q_j\}_{j=1}^M$, where $q_j \in \mathbb {R}^{3}$, 
+        the registration task consists of finding a transformation $T \in SE(3)$ that minimizes:
+        \begin{equation}
+            \label{eq:lossfunction}
+            \sum_{i = 1}^{N} \min_{j \in {1...M}} d( T p_i , q_j )    
+        \end{equation}
+          
+        where $d(T p_i, q_j)$ is the Euclidian distance between $H p_i$ and $q_j$.
+        In this case, the point set $P$ corresponds to the point cloud, while the point set $Q$ corresponds to the CityGML model.
+        It is clear that $P$ is formed by the same points that form the point cloud, 
+        but the set $Q$ could be a sampled point cloud from the CityGML model
+        or other characteristic points of the CityGML model.
+        
+        The difficulty of this task is to find correspondences between $P$ and $Q$ that minimizes eq. \ref{eq:lossfunction}.
+        If the correspondences were defined, the registration would be pretty straightforward and correct.
+
+%-------------------------------------------------------------------------------
+%	Registration Problem in 2D
+%-------------------------------------------------------------------------------
+    \section{Registration Problem in 2D}
+        To simplify the problem, one can transform the 3D registration problem into a 2D registration problem 
+        by projecting the point cloud and the CityGML model onto the xy-plane.
+
+        The registration problem in 2D remains the same as in 3D, but $p_i \in \mathbb{R}^{2}$, $q_j \in \mathbb {R}^{2}$, and $T \in SE(2)$.
+          
 \end{document}

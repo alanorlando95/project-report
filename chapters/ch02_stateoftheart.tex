@@ -24,10 +24,13 @@
 
     Figure \ref{fig:classification} shows an overview of the papers reviewed.
 
-
-
+%-------------------------------------------------------------------------------
+%	Point-to-point registration
+%-------------------------------------------------------------------------------
     \section{Point-to-point registration}
-
+    %-------------------------------------------------------------------------------
+    %	Global methods
+    %-------------------------------------------------------------------------------  
         \subsection{Global methods}
 
         RANSAC \cite{Fischler_1981_RANSAC} can also be used to perform the registration task but is time-consuming due to the randomness
@@ -70,9 +73,10 @@
         a transformation increment. 
         This increment is then employed to update the parameters of the transformation and transform one of the point clouds.
         The whole process is repeated until the loss computed is less than some desired value.
-    
 
-
+    %-------------------------------------------------------------------------------
+    %	Local methods
+    %-------------------------------------------------------------------------------  
         \subsection{Local methods}
 
         Besl and N. D. McKay \cite{Besl_1992_amethod} propose the Iterative Closest Point (ICP) algorithm to perform registration 
@@ -90,6 +94,9 @@
         ICP and its variants are still the standard algorithms for point cloud registration because of their simplicity. 
         % Nevertheless, to perform well they require a good initial approximation of the solution.
 
+    %-------------------------------------------------------------------------------
+    %	Hybrid methods
+    %-------------------------------------------------------------------------------  
         \subsection{Hybrid methods}
 
         The results of the global methods can be refined with the use of a local method, most of the time a variation of the popular ICP.
@@ -123,8 +130,14 @@
         The main contribution of LORAX is the use of an autoencoder to extract features of 3D point clouds. 
         Nevertheless, the implementation is not optimized for real-time performance and it is not proved to be fast for big point clouds.
 
+%-------------------------------------------------------------------------------
+%	Point-to-model registration
+%-------------------------------------------------------------------------------
     \section{Point-to-model registration}
 
+    %-------------------------------------------------------------------------------
+    %	Sampling methods
+    %-------------------------------------------------------------------------------  
         \subsection{Sampling methods}
 
         In order to register a 3D model with a point cloud, the simpliest idea is to sample points from the 3D model to generate a second point cloud
@@ -141,6 +154,9 @@
         The rest of the steps remain the same.
         However, using PCA for coarse registration will not assure a good performance when the form of the building is close to a cube.
         
+    %-------------------------------------------------------------------------------
+    %	Local methods
+    %-------------------------------------------------------------------------------  
         \subsection{Local methods}
 
         Other approaches work directly with the information provided in the 3D models to perform the registration task.
@@ -174,7 +190,9 @@
         Moreover, it has the same disadvantage as the previous approach: 
         the point cloud has to be already coarsely registered in order to obtain a successful and fast result.
 
-        
+%-------------------------------------------------------------------------------
+%	Others
+%-------------------------------------------------------------------------------      
     \section{Others}
     There are other approaches that attempt to solve different matching problems with or without correspondences.
     These approaches cannot be classified in the previous categories because their input data is not composed of two point clouds or one point cloud and a 3D model.
@@ -199,6 +217,9 @@
     They use an Integer Linear Program to minimize the elastic thin-shell energy requires to deform one shape into the other one.
     Their method can be improved by a relaxation of the Integer Linear Program and by including feature descriptors.
 
+%-------------------------------------------------------------------------------
+%	Limitations of previous work
+%-------------------------------------------------------------------------------
     \section{Limitations of previous work}
     ICP and its variants provide simple and easily-implemented iterative methods, but these algorithms can converge to false local optima \cite{Wang_2019_deepclosest}.
     Furthermore, they do not scale well with the number of points and they are not differentiable, therefore they cannot be integrated into end-to-end
