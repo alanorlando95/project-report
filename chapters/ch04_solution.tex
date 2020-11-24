@@ -21,7 +21,7 @@
 
         Therefore, the solution proposed is to detect the walls in the point cloud and the 3D model by projecting both onto the xy-plane,  
         and then use the angles of the corners of the walls (where the walls intersect)
-        in an Integer Linear Program to find correspondences and a transformation that aligns the point cloud with the 3D Model at the same time.
+        in a Mixed Integer Linear Program to find correspondences and a transformation that aligns the point cloud with the 3D Model at the same time.
         The exact details are given in the next section.
 
         From now on, the point cloud could be referred to as the source, and the 3D model as the target.
@@ -39,7 +39,7 @@
             \item Detection of line intersections and their angles.
             \item Identification of possible correspondences between angles detected.
             \item Alignment of both projections onto the xy-plane.
-            \item Translation across the z-axis.
+            \item Alignment on the z-axis.
         \end{enumerate}
 
     %-------------------------------------------------------------------------------
@@ -47,8 +47,8 @@
     %-------------------------------------------------------------------------------
         \subsection{Projection of the point cloud onto the xy-plane}
         \label{sub:Projection of the point cloud onto the xy-plane}
-            To simplify the registration task, one can transport it from the 3D space to the 2D space.
-            As we can see in Figure \ref{fig:initial_front_model} and Figure \ref{fig:initial_back_model}, 
+            To simplify the registration task, this is transported from the 3D space to the 2D space.
+            As we can see in \autoref{fig:initial_front_model} and \autoref{fig:initial_back_model}, 
             the z-axis of the source and the target is already correctly aligned.
             Which allows for a direct projection of the source onto the xy-plane to detect walls.
 
@@ -61,7 +61,7 @@
             To project the source onto the xy-plane, one can create an empty image with enough size for the source and the target to fit.
             Then, one can sum the number of points in the source with the same x- and y-coordinates and write the result in the corresponding pixel in the image.
             In this way, we can obtain a view of the source from bellow where line segments depict walls.
-            Figure \ref{fig:source_image} shows the image obtained after the projection of the source.
+            \autoref{fig:source_image} shows the image obtained after the projection of the source.
             
 
     %-------------------------------------------------------------------------------
@@ -81,7 +81,7 @@
             From this terrain intersection, only the x- and y-coordinates are used to make the projection.
             In an empty image, line segments are drawn from point to point so that a footprint is obtained.
 
-            Figure \ref{fig:target_image} shows the image obtained after this process.
+            \autoref{fig:target_image} shows the image obtained after this process.
 
             
     %-------------------------------------------------------------------------------
@@ -90,7 +90,7 @@
         \subsection{Detection of line segments}
             \begin{figure}[H]
                 \includegraphics[width=\textwidth]{images/solution_images/filter_inverted.png}
-                \caption{source image after filter.}
+                \caption{Source image after filter.}
                 \label{fig:source_image_filter}
             \end{figure}
         
@@ -99,7 +99,7 @@
             Therefore, to deal with the noise and remark the line segments of the source image an implementation of the technique proposed 
             by Chaudhuri et al. \cite{Chaudhuri_1989_detection}, to detect blood vessels in retinal images, together with a binary threshold is used. 
             The implementation of \cite{Chaudhuri_1989_detection} used is the one provided by DIPlib \cite{DIPlib_online}.
-            Figure \ref{fig:source_image_filter} shows the result after the filter is applied to Figure \ref{fig:source_image}.
+            \autoref{fig:source_image_filter} shows the result after the filter is applied to \autoref{fig:source_image}.
 
             Line segments in both images are detected using the probabilistic hough line transform of OpenCV \cite{opencv_library}.
             The number of line segments is reduced in four steps. 
@@ -114,34 +114,97 @@
     %	Detection of line intersections and their angles
     %-------------------------------------------------------------------------------
         \subsection{Detection of line intersections and their angles}
+            \begin{figure}[H]
+                \includegraphics[width=\textwidth]{images/solution_images/source_intersections_inverted.png}
+                \caption{Source lines and intersections.}
+                \label{fig:source_intersections}
+            \end{figure}
+
+            \begin{figure}[H]
+                \includegraphics[width=\textwidth]{images/solution_images/target_intersections_inverted.png}
+                \caption{Target lines and intersections.}
+                \label{fig:target_intersections}
+            \end{figure}
+
             The line segments are converted to their homogeneous representation, 
             and the intersections between them are calculated using the cross product as described in \cite{Hartley_2003_multiple_Book}.
             Only the intersections that are in the line segments are taken into account.
             Then, the angles of the intersections are computed.
+
+            The intersections detected in the source image and the target image are now the set of points $P$ and $Q$, respectively, 
+            as described in \autoref{section:Registration Problem in 2D}. 
+            \autoref{fig:source_intersections} shows $P$ and \autoref{fig:target_intersections} shows $Q$.
+
 
     %-------------------------------------------------------------------------------
     %	Identification of possible correspondences between angles detected
     %-------------------------------------------------------------------------------
         \subsection{Identification of possible correspondences between angles detected}
             The angles of the intersections in the source image and the target image are compared,
-            and if they are similar to each other they are saved.
+            and if they are similar to each other, they represent a possible match.
+
+            More formally, there is a matrix $C \in \mathbb{R}^{N \times M}$ that represents the possible correspondences.
+            That means that $c_{ij} = 1$ if the angle $i$ in the source image is similar to the angle $j$ in the target image.
+            Otherwise, $c_{ij} = 0$.
 
     %-------------------------------------------------------------------------------
     %	Alignment of both projections onto the xy-plane
     %-------------------------------------------------------------------------------
         \subsection{Alignment of both projections onto the xy-plane}
-            Therefore
+            \label{sub:Alignment of both projections onto the xy-plane}
+
+            \begin{figure}[H]
+                \includegraphics[width=\textwidth]{images/solution_images/2D_XY_initial_inverted.png}
+                \caption{Initial position of the source image and the target image.}
+                \label{fig:2D_initial}
+            \end{figure}
+
+            \begin{figure}[H]
+                \includegraphics[width=\textwidth]{images/solution_images/2D_XY_alignment_inverted.png}
+                \caption{Source image and target image aligned.}
+                \label{fig:2D_aligned}
+            \end{figure}
+
+            The Mixed Integer Linear Program of \autoref{section:Registration Problem as Mixed Integer Linear Program} is solved with the intersections detected.
+            The objective is changed to speed up the Mixed Integer Linear Program. The new objective is to maximize
+
+            \begin{equation}
+                \label{eq:objective_angles}
+                \sum_{i}^{N} \sum_{j}^{M} x_{ij} m_{ij} 
+            \end{equation}    
+
+            subject to the constraints presented in \autoref{section:Registration Problem as Mixed Integer Linear Program}.
+            This change in the objective adds additional information about the correspondences and significantly reduces the computation time.
+
+            The Mixed Integer Linear Program is solved and the result is a transformation $T$ that aligns the source image with the target image,
+            and a matrix $X$ that represents the correspondences between $P$ and $Q$.
+
+            \autoref{fig:2D_initial} shows the initial position of the source image and the target image.
+            \autoref{fig:2D_aligned} shows the result after the transformation of the source image with $T$.
+
+            Because the source image and the target image are a projection onto the xy-plane of the source and the target, respectively,
+            $T$ is used to align the source and the target on the x-axis and the y-axis by expanding it into the $SE(3)$.
 
     %-------------------------------------------------------------------------------
-    %	Translation across the z-axis
+    %	Alignment on the z-axis
     %-------------------------------------------------------------------------------
-        \subsection{Translation across the z-axis}
-            From the correspondences found, the point in the terrain intersection is found and the lowest point in the point cloud.
+        \subsection{Alignment on the z-axis}
+            Sometimes a translation across the z-axis is needed to align the source and the target completely.
+            The correspondences found in \autoref{sub:Alignment of both projections onto the xy-plane} 
+            can be used to find the l
+
+            If $x_{ij} = 1$ then the points $p_i$ and $q_j$ are used in the following way.
+            The point $p_i$ is used to find the lowest point $p_i^l$ in the source with x- and y-coordinates similar to those of $p_i$.
+            And the point $q_j$ is used to find the lowest point $q_j^l$ in the source with x- and y-coordinates similar to those of $q_j$.
+            Then, the difference along the z-axis between $p_i^l$ and $q_i^l$ is computed.
+            Finally, an average of all the differences computed is the translation $t_z$, which is then integrated into the transformation $T$.
 
 %-------------------------------------------------------------------------------
 %	Implementation details
 %-------------------------------------------------------------------------------
     \section{Implementation details}
-        - Math
+        - Python
+        - libraries
+        - 
 
 \end{document}
