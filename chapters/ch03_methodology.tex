@@ -30,13 +30,15 @@
         Therefore, the results are evaluated manually by a person who decides whether the registration was successful or not.
 
         \begin{figure}[H]
-            \includegraphics[width=\textwidth]{images/solution_images/initial_front_model.JPG}
+            \centering
+            \includegraphics[scale=0.2]{images/solution_images/initial_front_model.png}
             \caption{Front view of a point cloud and a model before registration.}
             \label{fig:initial_front_model}
         \end{figure}
       
         \begin{figure}[H]
-            \includegraphics[width=\textwidth]{images/solution_images/initial_back_model.JPG}
+            \centering
+            \includegraphics[scale=0.2]{images/solution_images/initial_back_model.png}
             \caption{Back view of a point cloud and a model before registration.}
             \label{fig:initial_back_model}
         \end{figure}
@@ -183,7 +185,6 @@
         If $\mid d(p_i, p_k) - d(q_j, q_l) \mid \geq \epsilon_l$, then either $p_i$ corresponds to $q_j$ or $p_k$ corresponds to $q_l$.
         The constant $\epsilon_l$ depends on $\epsilon_d$ and according to \cite{Sakakubara_2007_automatic}, 
         $\epsilon_l \geq 2 \sqrt{3} \epsilon_l$ needs to be satisfied because $\epsilon_d$ is the allowed rigid transformation error.
-
 
         The elements of $T$ are constrained in \autoref{eq:subject_transformation_variables},
         but the rest of the elemnts are constant: $t_{31} = 0$, $t_{32} = 0$, and $t_{33} = 1$.

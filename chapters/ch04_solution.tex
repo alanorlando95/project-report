@@ -52,10 +52,36 @@
             the z-axis of the source and the target is already correctly aligned.
             Which allows for a direct projection of the source onto the xy-plane to detect walls.
 
-            \begin{figure}[H]
-                \includegraphics[width=\textwidth]{images/solution_images/source_image_inverted.png}
+            % \begin{figure}[H]
+            %     \centering
+            %     \includegraphics[scale=0.2]{images/solution_images/source_image_inverted.png}
+            %     \caption{Projection of the source onto the xy-palne.}
+            %     \label{fig:source_image}
+            % \end{figure}
+
+            \begin{figure}\centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image]
+                    \node [image node] { \includegraphics[scale=0.12]{images/solution_images/source_image_inverted.png} };
+                    \zoombox[magnification=3, color code=blue]{0.45,0.52}
+                \end{tikzpicture}
                 \caption{Projection of the source onto the xy-palne.}
                 \label{fig:source_image}
+            \end{figure}
+
+            % \begin{figure}[H]
+            %     \centering
+            %     \includegraphics[scale=0.2]{images/solution_images/target_image_inverted.png}
+            %     \caption{Projection of the target onto the xy-palne.}
+            %     \label{fig:target_image}
+            % \end{figure}
+
+            \begin{figure}\centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_image]
+                    \node [image node] { \includegraphics[scale=0.12]{images/solution_images/target_image_inverted.png} };
+                    \zoombox[magnification=3, color code=red]{0.4,0.57}
+                \end{tikzpicture}
+                \caption{Projection of the target onto the xy-palne.}
+                \label{fig:target_image}
             \end{figure}
 
             To project the source onto the xy-plane, one can create an empty image with enough size for the source and the target to fit.
@@ -68,12 +94,6 @@
     %	Projection the 3D model onto the xy-plane
     %-------------------------------------------------------------------------------
         \subsection{Projection the 3D model onto the xy-plane}
-            \begin{figure}[H]
-                \includegraphics[width=\textwidth]{images/solution_images/target_image_inverted.png}
-                \caption{Projection of the target onto the xy-palne.}
-                \label{fig:target_image}
-            \end{figure}
-
             The difference between using CityGML Models and the PLY models relies on their projection onto the xy-plane.
             From the PLY model, a point cloud is sampled and projected onto the xy-plane as described in \autoref{sub:Projection of the point cloud onto the xy-plane}.
 
@@ -88,8 +108,18 @@
     %	Detection of line segments
     %-------------------------------------------------------------------------------
         \subsection{Detection of line segments}
-            \begin{figure}[H]
-                \includegraphics[width=\textwidth]{images/solution_images/filter_inverted.png}
+            % \begin{figure}[H]
+            %     \centering
+            %     \includegraphics[scale=0.2]{images/solution_images/filter_inverted.png}
+            %     \caption{Source image after filter.}
+            %     \label{fig:source_image_filter}
+            % \end{figure}
+
+            \begin{figure}\centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image_filter]
+                    \node [image node] { \includegraphics[scale=0.12]{images/solution_images/filter_inverted.png} };
+                    \zoombox[magnification=3, color code=blue]{0.45,0.52}
+                \end{tikzpicture}
                 \caption{Source image after filter.}
                 \label{fig:source_image_filter}
             \end{figure}
@@ -98,7 +128,7 @@
             The source image could be noisy, but the target is clear and the line segments that represent the walls are very well defined.
             Therefore, to deal with the noise and remark the line segments of the source image an implementation of the technique proposed 
             by Chaudhuri et al. \cite{Chaudhuri_1989_detection}, to detect blood vessels in retinal images, together with a binary threshold is used. 
-            The implementation of \cite{Chaudhuri_1989_detection} used is the one provided by DIPlib \cite{DIPlib_online}.
+            The implementation of \cite{Chaudhuri_1989_detection} used is the one provided by DIPlib \cite{DIPlib_library}.
             \autoref{fig:source_image_filter} shows the result after the filter is applied to \autoref{fig:source_image}.
 
             Line segments in both images are detected using the probabilistic hough line transform of OpenCV \cite{opencv_library}.
@@ -114,14 +144,34 @@
     %	Detection of line intersections and their angles
     %-------------------------------------------------------------------------------
         \subsection{Detection of line intersections and their angles}
-            \begin{figure}[H]
-                \includegraphics[width=\textwidth]{images/solution_images/source_intersections_inverted.png}
+            % \begin{figure}[H]
+            %     \centering
+            %     \includegraphics[scale=0.2]{images/solution_images/source_intersections_inverted.png}
+            %     \caption{Source lines and intersections.}
+            %     \label{fig:source_intersections}
+            % \end{figure}
+
+            \begin{figure}\centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_intersections]
+                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/source_intersections_inverted.png} };
+                    \zoombox[magnification=3, color code=blue]{0.45,0.52}
+                \end{tikzpicture}
                 \caption{Source lines and intersections.}
                 \label{fig:source_intersections}
             \end{figure}
 
-            \begin{figure}[H]
-                \includegraphics[width=\textwidth]{images/solution_images/target_intersections_inverted.png}
+            % \begin{figure}[H]
+            %     \centering
+            %     \includegraphics[scale=0.2]{images/solution_images/target_intersections_inverted.png}
+            %     \caption{Target lines and intersections.}
+            %     \label{fig:target_intersections}
+            % \end{figure}
+
+            \begin{figure}\centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_intersections]
+                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/target_intersections_inverted.png} };
+                    \zoombox[magnification=3, color code=red]{0.4,0.57}
+                \end{tikzpicture}
                 \caption{Target lines and intersections.}
                 \label{fig:target_intersections}
             \end{figure}
@@ -153,14 +203,34 @@
         \subsection{Alignment of both projections onto the xy-plane}
             \label{sub:Alignment of both projections onto the xy-plane}
 
-            \begin{figure}[H]
-                \includegraphics[width=\textwidth]{images/solution_images/2D_XY_initial_inverted.png}
+            % \begin{figure}[H]
+            %     \centering
+            %     \includegraphics[scale=0.2]{images/solution_images/2D_XY_initial_inverted.png}
+            %     \caption{Initial position of the source image and the target image.}
+            %     \label{fig:2D_initial}
+            % \end{figure}
+
+            \begin{figure}\centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_initial]
+                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/2D_XY_initial_inverted.png} };
+                    \zoombox[magnification=3, color code=lime]{0.4,0.57}
+                \end{tikzpicture}
                 \caption{Initial position of the source image and the target image.}
                 \label{fig:2D_initial}
             \end{figure}
 
-            \begin{figure}[H]
-                \includegraphics[width=\textwidth]{images/solution_images/2D_XY_alignment_inverted.png}
+            % \begin{figure}[H]
+            %     \centering
+            %     \includegraphics[scale=0.2]{images/solution_images/2D_XY_alignment_inverted.png}
+            %     \caption{Source image and target image aligned.}
+            %     \label{fig:2D_aligned}
+            % \end{figure}
+
+            \begin{figure}\centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_aligned]
+                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/2D_XY_alignment_inverted.png} };
+                    \zoombox[magnification=3, color code=lime]{0.4,0.57}
+                \end{tikzpicture}
                 \caption{Source image and target image aligned.}
                 \label{fig:2D_aligned}
             \end{figure}
@@ -203,8 +273,11 @@
 %	Implementation details
 %-------------------------------------------------------------------------------
     \section{Implementation details}
-        - Python
-        - libraries
-        - 
+        The solution was implemented with Python. Therefore, the standard library "json" was used to read the CityGML models.
+        Numpy \cite{harris_2020_numpy} was used to compute array operations.
+        Open3d \cite{Zhou_2018_open3d} was used for the visualization of 3D models and point clouds.
+        OpenCV \cite{opencv_library} was used to process images.
+        PyDIP \cite{DIPlib_library} was used to filter the 2D projection of the model and to make the lines more visible. 
+        Python-MIP \cite{pythonMIP_library} was used to solve the Mixed Integer Linear Program described in \autoref{sub:Alignment of both projections onto the xy-plane}.
 
 \end{document}
