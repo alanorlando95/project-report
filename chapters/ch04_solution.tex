@@ -60,7 +60,7 @@
             % \end{figure}
 
             \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image]
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.12]{images/solution_images/source_image_inverted.png} };
                     \zoombox[magnification=3, color code=blue]{0.45,0.52}
                 \end{tikzpicture}
@@ -76,9 +76,9 @@
             % \end{figure}
 
             \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_image]
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_image, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.12]{images/solution_images/target_image_inverted.png} };
-                    \zoombox[magnification=3, color code=red]{0.4,0.57}
+                    \zoombox[magnification=3, color code=green]{0.4,0.57}
                 \end{tikzpicture}
                 \caption{Projection of the target onto the xy-palne.}
                 \label{fig:target_image}
@@ -116,7 +116,7 @@
             % \end{figure}
 
             \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image_filter]
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image_filter, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.12]{images/solution_images/filter_inverted.png} };
                     \zoombox[magnification=3, color code=blue]{0.45,0.52}
                 \end{tikzpicture}
@@ -152,7 +152,7 @@
             % \end{figure}
 
             \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_intersections]
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_intersections, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.1]{images/solution_images/source_intersections_inverted.png} };
                     \zoombox[magnification=3, color code=blue]{0.45,0.52}
                 \end{tikzpicture}
@@ -168,9 +168,9 @@
             % \end{figure}
 
             \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_intersections]
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_intersections, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.1]{images/solution_images/target_intersections_inverted.png} };
-                    \zoombox[magnification=3, color code=red]{0.4,0.57}
+                    \zoombox[magnification=3, color code=green]{0.4,0.57}
                 \end{tikzpicture}
                 \caption{Target lines and intersections.}
                 \label{fig:target_intersections}
@@ -211,9 +211,9 @@
             % \end{figure}
 
             \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_initial]
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_initial, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.1]{images/solution_images/2D_XY_initial_inverted.png} };
-                    \zoombox[magnification=3, color code=lime]{0.4,0.57}
+                    \zoombox[magnification=3, color code=yellow]{0.4,0.57}
                 \end{tikzpicture}
                 \caption{Initial position of the source image and the target image.}
                 \label{fig:2D_initial}
@@ -227,9 +227,9 @@
             % \end{figure}
 
             \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_aligned]
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_aligned, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.1]{images/solution_images/2D_XY_alignment_inverted.png} };
-                    \zoombox[magnification=3, color code=lime]{0.4,0.57}
+                    \zoombox[magnification=3, color code=yellow]{0.4,0.57}
                 \end{tikzpicture}
                 \caption{Source image and target image aligned.}
                 \label{fig:2D_aligned}
@@ -279,5 +279,14 @@
         OpenCV \cite{opencv_library} was used to process images.
         PyDIP \cite{DIPlib_library} was used to filter the 2D projection of the model and to make the lines more visible. 
         Python-MIP \cite{pythonMIP_library} was used to solve the Mixed Integer Linear Program described in \autoref{sub:Alignment of both projections onto the xy-plane}.
+
+        The parameter $\epsilon_d$ used in \autoref{eq:subject_transformation_0}, \autoref{eq:subject_transformation_negative_0}, \autoref{eq:subject_transformation_1}, and \autoref{eq:subject_transformation_negative_1}
+        was set to 20 cm, and the parameter $b$ was set to two times the maximum distance between points in the source and the target image.
+        Moreover, the parameter $\epsilon_l$ was set to $\epsilon_l \geq 2 \sqrt{3} \epsilon_l$. 
+        
+        The upper and lower bounds of $T$ showed in \autoref{eq:subject_transformation_variables} were set as follows: 
+        $\delta_1^- = 0.7$, $\delta_1^+ = 1.3$, $\delta_2^- = -0.3$, $\delta_2^+ = 0.3$, $t_x^- = -b / 2$, $t_x^+ = b / 2$, $t_y^- = -b / 2$, and $t_y^+ = b / 2$.
+        However, these bounds can be changed to allow a different transformation (different rotation or different translation).
+        Because the universities that provide the point cloud data agreed to send it in a position and orientation close to the model’s position, the parameters chosen allow only a small rotation and a small translation.
 
 \end{document}

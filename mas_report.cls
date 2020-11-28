@@ -498,7 +498,7 @@ Supervised by\par
         zoombox paths/.append style={draw=#1}
     },
     connect zoomboxes/.style={
-    spy connection path={\draw[draw=none,zoombox paths] (tikzspyonnode) -- (tikzspyinnode);}
+        spy connection path={\draw[draw=none,zoombox paths] (tikzspyonnode) -- (tikzspyinnode);}
     },
     help grid code/.code={
         \begin{scope}[
