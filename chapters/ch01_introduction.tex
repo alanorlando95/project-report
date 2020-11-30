@@ -16,14 +16,19 @@
         \par
         What if the firefighters are supported by rescue robots?
         With the use of rescue robots that explore the accident areas, we can help firefighters do their job more safely.
-        Rescue robots can explore buildings to find entrances, exits, and other key areas that help the firefighters to rescue people in a faster and efficient way.
+        Rescue robots can explore buildings to find entrances, exits, and other key areas that help the firefighters to rescue people in a faster and more efficient way.
         But robots cannot find their exact position inside a building with a single GPS, because this kind of technology is unreliable under certain conditions 
         (e.g. inside buildings).
         \par
         In this work, we try to enable rescue robots to explore buildings with the use of LiDAR systems and 3D models of the buildings.
         With the use of LiDAR systems, we can obtain representations of the actual status of buildings at risk without endangering any lives. 
         These kinds of representations are known as point clouds.
+        \par
         With the use of CityGML models \cite{Groger_2012_OGC}, we have access to the 3D representation of many buildings in Germany.
+        CityGML models can be presented in different Levels of Detail (LOD), from the coarsest level LOD0 to the most refined level LOD4.
+        In LOD0, buildings can be represented by a simple footprint. While in LOD4, buildings contain information about windows, doors, stairs, and other internal structures.
+        Unfortunately, not all models are LOD4. Even if they were, the information might be outdated. For example, it may be that due to some collapse, some door or window is blocked.
+        \par
         Using modern registration techniques, one can find a match between the point cloud given by the LiDAR system and the 3D model of the building.
         The registration result can be then used to find the exact position of the robot with respect to the building.
         The registration result can also help to locate relevant parts of the building like windows, doors, stairs, or corridors.
@@ -45,7 +50,7 @@
         An additional challenge is the data itself, the point clouds available are partial and they do not represent the whole 3D model, 
         normally they just capture part of the walls of the buildings and the surface outside the buildings.
         And vice versa, the 3D models do not have information of the surface outside the buildings.
-        The only information available in both, the 3D models and the point cloud, are some of the walls of the buildings.
+        The only information available in both the 3D models and the point cloud is some of the walls of the buildings.
         \par
         At the time this work was started, there was no GPS information of the point clouds used in the registration, just of the CityGML model. 
         Therefore, it was not possible to perform a coarse registration with GPS information and the coarse registration need to be done by other means.
@@ -58,14 +63,14 @@
 %-------------------------------------------------------------------------------
     \section{Problem Statement}
         This work intends to implement an automated registration method for a point cloud with a CityGML model.
-        This automated registration method will then be used as part of the A-DRZ (Aufbau des Deutschen Rettungsrobotik-Zentrums) project of the Fraunhofer IAIS.
+        This automated registration method will then be used as part of the A-DRZ (Aufbau des Deutschen Rettungsrobotik-Zentrums) \cite{A-DRZ_online} project of the Fraunhofer IAIS.
         Figure \ref{fig:adrz} shows the system architecture of the A-DRZ project. 
         The final objective of the automated registration in the A-DRZ project is to be able to look inside the CityGML models, in order to 
         find the location and status of relevant parts of the buildings (e.g. doors, windows, stairs, and corridors) that can be used for rescue task.
 
         \begin{figure}[H]
             \includegraphics[width=\textwidth]{images/Systemaufbau.png}
-            \caption{A-DRZ architecture system.}
+            \caption{A-DRZ architecture system (Image provided by the Fraunhofer IAIS).}
             \label{fig:adrz}
         \end{figure}
 
