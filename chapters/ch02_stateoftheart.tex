@@ -33,21 +33,21 @@
     %-------------------------------------------------------------------------------  
         \subsection{Global methods}
 
-        RANSAC \cite{Fischler_1981_RANSAC} can also be used to perform the registration task but is time-consuming due to the randomness
+        RANSAC \cite{Fischler_1981_RANSAC} can be used to perform the registration task but is time-consuming due to the randomness
         of the RANSAC algorithm. Therefore, Pankaj et al. \cite{Pankaj_2015_arobust} present a guided sampling improvement to RANSAC,
-        to reduce the registration time, sorting the correspondences obtained from a previous 3D feature matching according to its quality.
+        to reduce the registration time, sorting the correspondences obtained from a previous 3D feature matching according to their quality.
         
         Following the same line, S. Quan and J. Yang \cite{Quan_2020_com} propose a method that helps the RANSAC algorithm 
-        sampling the best point correspondences. Their approach first detects keypoints using Harris3D, then it matches the keypoints
+        sample the best point correspondences. Their approach first detects keypoints using Harris3D, then it matches the keypoints
         by using the Local Voxelized Structure (LoVS) descriptor. After that, the set of correspondences is reduced using the 
         Nearest Neighbor Similarity Ration (NNSR) and the compatibility score of the remaining correspondences with the rigidity and 
-        DSP constraint. Finally, the correspondences with the best compatibility scores are using to generate transformations and 
+        DSP constraint. Finally, the correspondences with the best compatibility scores are used to generate transformations and 
         the best one (the one with the maximum number of inliers) is the final result. Unfortunately, the RANSAC-based approaches are sensitive to outliers.
 
         Another less common approach for coarse registration is proposed by Sakakubara et al. \cite{Sakakubara_2007_automatic}.
         This coarse registration approach uses Mixed Integer Linear Programming to find pairs of corresponding points that are then 
         used to find a coarse transformation that aligns two different point clouds.
-        This approach finds a global optimal result without using the values of the invariant features, 
+        This approach finds a global optimal result without using the values of invariant features, 
         it adjusts the error tolerance depending on the accuracy of the given data and 
         it finds the best correspondences between the points.
         Nevertheless, Mixed Integer Linear Programming problems are NP-hard. Therefore, this approach is excessively time-consuming.
@@ -58,17 +58,17 @@
         Then, it uses an attention-based module to encode the output of the first part.
         Finally, it estimate the transformation using a differentiable SVD layer.
 
-        Sarode et. al \cite{Sarode_2019_oneframework} present a registration framework that also use the PointNet to extract feature from the point clouds.
+        Sarode et. al \cite{Sarode_2019_oneframework} present a registration framework that also uses PointNet to extract features from the point clouds.
         The PointNet features are then aligned using another network. The process is then repeated a given number of times to improve the registration result.
         
         Ding and Feng \cite{Ding_2019_deepmapping} present another deep learning method called DeepMapping,
         whose main structure is constituted of two deep neural networks.
-        The first network is a localization network, whose output is the pose estimation for the input point clouds.
-        And the second network is a map network that estimates the occupancy status of the input locations to compute a loss function that reveals
+        The first network is a localization network, whose output is the pose estimation for the input point clouds,
+        and the second network is a map network that estimates the occupancy status of the input locations to compute a loss function that reveals
         the registration quality.
 
         More recently, Huang et al. \cite{Huang_2020_feature} propose a learning method that can be trained in a semi-supervised or unsupervised way.
-        The proposed framework is composed of an encoder, that extracts features from the input point clouds, 
+        The proposed framework is composed of an encoder that extracts features from the input point clouds
         and a decoder that decodes the extracted features to compute a projection error that serves as input for an algorithm that estimates
         a transformation increment. 
         This increment is then employed to update the parameters of the transformation and transform one of the point clouds.
@@ -86,7 +86,7 @@
 
         According to Segal et al. \cite{Segal_2009_generalizedicp}, the ICP algorithm can be summarized in two main steps:
         the computation of correspondences between the two scans and 
-        the computation of a transformation that minimizes the distance between corresponding points.
+        the computation of a transformation that minimizes the distance between the corresponding points.
         They present a generalized version of the ICP algorithm by attaching a probabilistic model to the second step.
         This generalization makes the algorithm more robust to outliers without modifying the simplicity. 
         However, it does not improve the speed of the original ICP.
@@ -106,10 +106,24 @@
         The main idea of Go-ICP is that BnB and ICP work iteratively until a global minimum is reached: BnB finds a solution and this is refined by ICP.
         Go-ICP guarantees global optimality regardless of the initialization and it is recommended for scenarios where real-time performance is not critical.
 
-        The approach proposed by Jun Lu et al. \cite{Lu_2019_4pcsicp} obtains a consistent four-point set by using Super4PCS \cite{Mellado_2014_super4pcs}, 
-        then it creates a neighborhood ball with each point as the center and obtains the overlapping regions as the intersections
-        of these neighborhood balls. Finally, ICP is applied to the overlapping regions. The main drawback of this method is that 
-        there should exist overlapping regions in order to perform the registration task.
+        The approach proposed by Jun Lu et al. \cite{Lu_2019_4pcsicp} extracts keypoints from the point clouds, 
+        then it obtains four optimal consistent points from the key points by using Super4PCS \cite{Mellado_2014_super4pcs},  
+        afterwards it creates a neighborhood ball with each point as its center and obtains the overlapping regions as the intersections of these neighborhood balls. 
+        Finally, ICP is applied to the overlapping regions. 
+        The main drawback of this method is that there overlapping regions should exist to perform the registration task.
+
+        The approach proposed by Jun Lu et al. \cite{Lu_2019_4pcsicp} extracts keypoints from the point clouds, 
+        then it obtains four optimal point correspondences from the key points by using Super4PCS \cite{Mellado_2014_super4pcs},
+        i.e., the four-point correspondences that minimize the number of outliers. 
+        Afterward, it creates a neighborhood ball with each point as its center and obtains these neighborhood balls’ overlapping regions. 
+        Finally, it applies ICP to the overlapping regions. 
+        The main drawback of this method is that overlapping regions should exist to perform the registration task.
+
+        The approach proposed by Jun Lu et al. [2] extracts keypoints from the point clouds, 
+        then it obtains four optimal point correspondences from the key points by using Super4PCS [5], i.e., the four-point correspondences that minimize the number of outliers. 
+        Afterward, it creates a neighborhood ball with each point as its center and obtains the overlapping regions as these neighborhood balls’ intersections. 
+        Finally, it applies ICP is to the overlapping regions. 
+        The main drawback of this method is that there overlapping regions should exist to perform the registration task.
 
         Because of the increasing success of Deep Learning in 2D applications, there have been attempts to use deep neural networks
         to solve the complete point cloud registration problem (global and local registration).
@@ -119,10 +133,10 @@
         In the second step, the Pont Weighting (3DFeatNet \cite{Yew_2018_3dfeat}) selects the relevant points.
         In the third step, the selected points of the target point cloud are sampled using the initial transformations.
         In the fourth step, Deep Feature Embedding is used to obtain more specific descriptors of the points.
-        In the final step, the corresponding pair of points are generated with a 3D Convolutional Neural Network
+        In the final step, the corresponding pairs of points are generated with a 3D Convolutional Neural Network
         to compute an improvement of the initial transformation.
         
-        Another approaches does not use a neural network to solve the complete point cloud registration problem but a part of it.
+        Other approaches does not use a neural network to solve the complete point cloud registration problem but a part of it.
         LORAX is an algorithm proposed in \cite{Elbaz_2017_3dpoint} that selects some sets of points called super-points and uses a low-dimensional descriptor 
         generated by an autoencoder to describe the structure of each super-point.
         The sets of superpoints of both pointclouds are then matched using the euclidean distance between the descriptors.
@@ -163,32 +177,32 @@
 
         Li and Song \cite{Li_2015_amodified} propose two extensions to the most popular local registration method, the ICP algorithm, 
         to be able to use it with an STL-file (3D model) and a point cloud.
-        The first of these extensions is called ICP-STL, and its main modification consists of finding the corresponding triangle mesh of the STL file of the points 
+        The first of these extensions is called ICP-STL, and its main modification consists of finding the corresponding triangle mesh of the STL file to the points 
         in the point cloud, and then the closest point in the triangle mesh to each point of the point cloud. The rest of the ICP algorithm remains the same.
         The second modification is called ICP-DAF (ICP dynamic adjustment factor), and it aims to reduce the time of the ICP-STL method. 
         ICP-DAF adds a dynamic adjustment factor to adjust the transformation parameters dinamically.
         The disadvantage of this method is the same disadvantage present in the ICP algorithm, to perform well it requires a good initial approximation of the solution.
 
         In the specific case of CityGML, Goebbels et al. \cite{Goebbels_2019_icpcitygml} propose an extension of the well-known ICP
-        to perform point-to-model registration based on the point-to-plane registration.
+        to perform point-to-model registration based on point-to-plane registration.
         This approach only considers points on the perimeter of the buildings.
-        The main contribution of this approach is the speed. Point-to-model ICP is faster than the point-to-plane ICP.
+        The main contribution of this approach is the speed since point-to-model ICP is faster than the point-to-plane ICP.
         Nevertheless, the CityGML models used contained no terrain information. 
         Therefore, the ground plane is the lowest point of the building and some walls might intersect with the real terrain, increasing the error of the algorithm.
         An additional disadvantage of this method is that it expects the point cloud to be coarsely register with the model.
 
-        Another approach by Goebbels et al. \cite{Goebbels_2018_linebased} explores the possibility to find features that help to perform the registration.
+        Another approach by Goebbels et al. \cite{Goebbels_2018_alinear} explores the possibility to find features that help to perform the registration.
         The approach first rotates the point cloud to align the walls to the z-axis. Then it projects all the points onto the 
-        xy-plane to obtain a 2D image of the point cloud viewed from above. After that, it detects the corners or lines in the 2D image,
-        and having the corners or lines of the CityGML model it applies a Mixed Integer Linear Program to perform the registration.
+        xy-plane to obtain a 2D image of the point cloud viewed from above. After that, it detects the corners in the 2D image,
+        and having the corners of the CityGML model it applies a Mixed Integer Linear Program to perform the registration.
+        Finally, a Linear Program relaxation is used to fine-tune the coarse result. 
         Nonetheless, the point cloud has to be already coarsely registered in order to obtain a successful and fast result.
 
-        An extension of the work in \cite{Goebbels_2018_linebased} has been made by Goebbels et al. \cite{Goebbels_2018_alinear}, 
-        where the steps to perform the registration are the same.
-        However, in the last step, a Linear Program is used to fine-tune the coarse result. 
-        Unfortunately, the results of this method depend on the value of an error bound, which affects the generalization of the algorithm.
-        Moreover, it has the same disadvantage as the previous approach: 
-        the point cloud has to be already coarsely registered in order to obtain a successful and fast result.
+        An extension of the work in \cite{Goebbels_2018_alinear} has been made by Goebbels et al. \cite{Goebbels_2018_linebased}, 
+        where the steps to perform the registration are the same, but instead of corners, lines are used in the Mixed Integer Linear Program. 
+        Furthermore, no fine registration is performed at the end.
+        Unfortunately, it has the same disadvantage as the previous approach: the point cloud has to be already coarsely registered to obtain a successful and fast result.
+        Although, this is not a disadvantage if the desired method will be just used to perform a fine registration.
 
 %-------------------------------------------------------------------------------
 %	Others
@@ -214,7 +228,7 @@
     that is able to use points, lines, or a combination of both.
 
     Windheuser et al. \cite{Windheuser_2011_largescale} propose the use of Integer Linear Programming to find correspondences between non-rigid 3D shapes.
-    They use an Integer Linear Program to minimize the elastic thin-shell energy requires to deform one shape into the other one.
+    They use an Integer Linear Program to minimize the elastic thin-shell energy required to deform one shape into the other one.
     Their method can be improved by a relaxation of the Integer Linear Program and by including feature descriptors.
 
 %-------------------------------------------------------------------------------
@@ -242,5 +256,6 @@
     In general, one thing that can be noticed is that none of this methods offers a direct solution for the coarse registration of a model with a point cloud.
     The only solution available for this is to sample a point cloud from the model and apply a global method for two point clouds.
     Unfortunately, this solution does not leverage the complete information contained in the model.
+    However, some of the ideas of the approaches presented in this chapter can be used to implement alternative coarse registration methods of a point cloud with a CityGML model.
 
 \end{document}
