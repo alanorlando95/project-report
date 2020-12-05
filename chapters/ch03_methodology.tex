@@ -24,23 +24,28 @@
         which have integrated corresponding laser scanners and Lidar sensors on their platforms.
 
         \autoref{fig:initial_front_model} and \autoref{fig:initial_back_model} show a CityGML model and its corresponding point cloud
-        before being registered.
+        before being registered. The pose of the point cloud is different from the pose of the CityGML model.
             
         Unfortunately, there is no ground truth for the registration of the data available. 
         Therefore, the results are evaluated manually by a person who decides whether the registration was successful or not.
 
         \begin{figure}[H]
             \centering
-            \includegraphics[scale=0.2]{images/solution_images/initial_front_model.png}
-            \caption{Front view of a point cloud and a model before registration.}
-            \label{fig:initial_front_model}
-        \end{figure}
-      
-        \begin{figure}[H]
-            \centering
-            \includegraphics[scale=0.2]{images/solution_images/initial_back_model.png}
-            \caption{Back view of a point cloud and a model before registration.}
-            \label{fig:initial_back_model}
+            \begin{subfigure}{1\textwidth}
+                \centering
+                \includegraphics[scale=0.2]{images/solution_images/initial_front_model.png}
+                \caption{Front view.}
+                \label{fig:initial_front_model}
+            \end{subfigure}
+            \hfill
+            \begin{subfigure}{1\textwidth}
+                \centering
+                \includegraphics[scale=0.2]{images/solution_images/initial_back_model.png}
+                \caption{Back view.}
+                \label{fig:initial_back_model}
+            \end{subfigure}
+            \caption{CityGML model and its corresponding point cloud before registration.}
+            \label{fig:initial_CityGML}
         \end{figure}
         
         
