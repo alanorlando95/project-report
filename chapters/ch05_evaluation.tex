@@ -4,34 +4,51 @@
     \chapter{Results and Evaluation}
 
     In this chapter, the results of the registration of the available data using the solution presented in \autoref{chap:Solution} will be presented and discussed.
-    The data was visulized with the 3D visualization provided by Open3D. 
+    The data was visulized with the 3D visualization provided by Open3D.    
 
 %-------------------------------------------------------------------------------
 %	Registration of a CityGML model with a point cloud
 %-------------------------------------------------------------------------------
     \section{Registration of a CityGML model with a point cloud}
-        The initial pose of the CityGML model and the point cloud can be found in \autoref{fig:initial_front_model} and \autoref{fig:initial_back_model}.
+        The initial pose of the CityGML model and the point cloud can be found in \autoref{fig:initial_CityGML}.
         \autoref{fig:initial_front_model} shows a front view of the fire exercise building in Dortmund, while \autoref{fig:initial_back_model} shows a back view.
+        The point cloud is just rotated around the z-axis and translated across the x- and y-axis.
+        It is also slightly translated across the z-axis, but this is not easy to visualize.
 
-        The result after the registration is showed in \autoref{fig:final_front_model} and \autoref{fig:final_back_model}.
-        After the resultin
+        After the registration process, the resulting transformation is
+
+        \begin{equation*}
+            T_1 = 
+            \begin{bmatrix}0.987 & -0.197 & 0.0 & -4.994 \\ 
+                0.197 & 0.987 & 0.0 & -2.636 \\
+                0.0 & 0.0 & 1.0 & -0.207 \\
+                0.0 & 0.0 & 0.0 & 1.0
+            \end{bmatrix}
+        \end{equation*}
+
+        and the results after applying this transformation to the point cloud are showed in \autoref{fig:final_CityGML}.
+        In the transformation, one can observe a rotation around the z-axis and a translation across the x-, y-, and z-axis.
+
+        The alignment of the CityGML model with the point cloud can be seen in the fire exercise building (the one in the center of the image)
+        and the right building in \autoref{fig:final_front_model}. The walls and the ceilings are correctly overlapped in both buildings.
+        There is only a slight misalignment in the center part of the ceil of the fire exercise building because the CityGML model is outdated.
 
         \begin{figure}[H]
             \centering
             \begin{subfigure}{1\textwidth}
                 \centering
                 \includegraphics[scale=0.2]{images/solution_images/final_front.png}
-                \caption{Front view of a point cloud and a CityGML model after registration.}
+                \caption{Front view.}
                 \label{fig:final_front_model}
             \end{subfigure}
             \hfill
             \begin{subfigure}{1\textwidth}
                 \centering
                 \includegraphics[scale=0.2]{images/solution_images/final_back.png}
-                \caption{Back view of a point cloud and a CityGML model after registration.}
+                \caption{Back view.}
                 \label{fig:final_back_model}
             \end{subfigure}
-            \caption{A figure with two subfigures}
+            \caption{CityGML model and its corresponding point cloud after registration.}
             \label{fig:final_CityGML}
         \end{figure}
 
@@ -39,45 +56,85 @@
 %	Registration of a PLY model with a point cloud
 %-------------------------------------------------------------------------------
     \section{Registration of a PLY model with a point cloud}
+
+        The second available data represents a part of the Technical University of Darmstadt.
+        The 3D model is given in ply format, but this does not make any difference in the visualization.
+        \autoref{fig:initial_ply} shows two different views of the initial pose of the 3D model and its corresponding point cloud.
+        This time, the point cloud is translated across the x-, y-, and z-axis and rotated around the z-axis. 
+        
+        After the registration process, the resulting transformation is
+
+        \begin{equation*}
+            T_2 = 
+            \begin{bmatrix}
+                0.882 & -0.455 & 0.0 & 20.504 \\ 
+                0.455 & 0.882 & 0.0 & -21.645 \\
+                0.0 & 0.0 & 1.0 & -19.254 \\
+                0.0 & 0.0 & 0.0 & 1.0
+            \end{bmatrix}    
+        \end{equation*}
+        
+        and the results after applying this transformation to the point cloud are showed in \autoref{fig:final_ply}.
+        
+
         \begin{figure}[H]
             \centering
             \begin{subfigure}{1\textwidth}
                 \centering
                 \includegraphics[scale=0.2]{images/solution_images/initial_ply_a.png}
-                \caption{Front view a point cloud and a PLY model before registration.}
+                \caption{Frist view.}
                 \label{fig:intial_ply_a}
             \end{subfigure}
             \hfill
             \begin{subfigure}{1\textwidth}
                 \centering
                 \includegraphics[scale=0.2]{images/solution_images/initial_ply_b.png}
-                \caption{Back view of a point cloud and a PLY model before registration.}
+                \caption{Second view.}
                 \label{fig:intial_ply_b}
             \end{subfigure}
-            \caption{A figure with two subfigures}
+            \caption{PLY model and its corresponding point cloud before registration.}
             \label{fig:initial_ply}
         \end{figure}
 
-        
+        In the transformation, one can observe a rotation around the z-axis and a translation across the x-, y-, and z-axis.
+        This time, the translation across the z-axis is considerably larger than the one in $T_1$.
+
+        In \autoref{fig:final_ply}, one can see that the walls are correctly aligned.
+        Unfortunately, the point cloud does not contain any scans of the ceilings, and it is not clear whether the alignment in the z-axis is correct or not. 
+        However, the point cloud contains the ground information of the center area between the buildings, 
+        and one can see that it is aligned with the floor of the buildings.
+
         \begin{figure}[H]
             \centering
             \begin{subfigure}{1\textwidth}
                 \centering
                 \includegraphics[scale=0.2]{images/solution_images/final_ply_a.png}
-                \caption{Front view a point cloud and a PLY model after registration.}
+                \caption{First view.}
                 \label{fig:final_ply_a}
             \end{subfigure}
             \hfill
             \begin{subfigure}{1\textwidth}
                 \centering
                 \includegraphics[scale=0.2]{images/solution_images/final_ply_b.png}
-                \caption{Back view of a point cloud and a PLY model after registration.}
+                \caption{Second view.}
                 \label{fig:final_ply_b}
             \end{subfigure}
-            \caption{A figure with two subfigures}
+            \caption{PLY model and its corresponding point cloud after registration.}
             \label{fig:final_ply}
         \end{figure}
 
-
+%-------------------------------------------------------------------------------
+%	Discussion
+%-------------------------------------------------------------------------------
+    \section{Discussion}
+        The results presented in the two past sections depend on the step described in 
+        \autoref{sub:Detection of line intersections and their angles}, i.e., on detecting lines and their intersections.
+        If the number of intersections detected is poor, then the registration results could be wrong.
+        And the accuracy of the registration result depends on the accuracy with which the position of the intersections is detected.
+        
+        The results obtained from the proposed solution are successful. 
+        Although they just provide a coarse registration, this is significant for the proposes of the A-DRZ project.
+        The registration method is ready to be included in the A-DRZ software of the Fraunhofer IAIS,
+        and whenever there are new point clouds, the method could be further tested.
     
 \end{document}

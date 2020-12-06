@@ -57,13 +57,6 @@
             the z-axis of the source and the target is already correctly aligned.
             Which allows for a direct projection of the source onto the xy-plane to detect walls.
 
-            % \begin{figure}[H]
-            %     \centering
-            %     \includegraphics[scale=0.2]{images/solution_images/source_image_inverted.png}
-            %     \caption{Projection of the source onto the xy-palne.}
-            %     \label{fig:source_image}
-            % \end{figure}
-
             \begin{figure}\centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.12]{images/solution_images/source_image_inverted.png} };
@@ -72,13 +65,6 @@
                 \caption{Projection of the source onto the xy-palne.}
                 \label{fig:source_image}
             \end{figure}
-
-            % \begin{figure}[H]
-            %     \centering
-            %     \includegraphics[scale=0.2]{images/solution_images/target_image_inverted.png}
-            %     \caption{Projection of the target onto the xy-palne.}
-            %     \label{fig:target_image}
-            % \end{figure}
 
             \begin{figure}\centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_image, connect zoomboxes]
@@ -113,12 +99,6 @@
     %	Detection of line segments
     %-------------------------------------------------------------------------------
         \subsection{Detection of line segments}
-            % \begin{figure}[H]
-            %     \centering
-            %     \includegraphics[scale=0.2]{images/solution_images/filter_inverted.png}
-            %     \caption{Source image after filter.}
-            %     \label{fig:source_image_filter}
-            % \end{figure}
 
             \begin{figure}\centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image_filter, connect zoomboxes]
@@ -149,13 +129,7 @@
     %	Detection of line intersections and their angles
     %-------------------------------------------------------------------------------
         \subsection{Detection of line intersections and their angles}
-            % \begin{figure}[H]
-            %     \centering
-            %     \includegraphics[scale=0.2]{images/solution_images/source_intersections_inverted.png}
-            %     \caption{Source lines and intersections.}
-            %     \label{fig:source_intersections}
-            % \end{figure}
-
+        \label{sub:Detection of line intersections and their angles}
             \begin{figure}\centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_intersections, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.1]{images/solution_images/source_intersections_inverted.png} };
@@ -165,12 +139,6 @@
                 \label{fig:source_intersections}
             \end{figure}
 
-            % \begin{figure}[H]
-            %     \centering
-            %     \includegraphics[scale=0.2]{images/solution_images/target_intersections_inverted.png}
-            %     \caption{Target lines and intersections.}
-            %     \label{fig:target_intersections}
-            % \end{figure}
 
             \begin{figure}\centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_intersections, connect zoomboxes]
@@ -202,18 +170,15 @@
             That means that $c_{ij} = 1$ if the angle $i$ in the source image is similar to the angle $j$ in the target image.
             Otherwise, $c_{ij} = 0$.
 
+            If the point cloud and the model are supposed to be close to each other (not necessarily coarsely registered),
+            the possible matches could be further reduced by setting $c_{ij} = 0$ when the euclidean distance between $p_i$
+            and $q_j$ is greater than a selected threshold.
+
     %-------------------------------------------------------------------------------
     %	Alignment of both projections onto the xy-plane
     %-------------------------------------------------------------------------------
         \subsection{Alignment of both projections onto the xy-plane}
             \label{sub:Alignment of both projections onto the xy-plane}
-
-            % \begin{figure}[H]
-            %     \centering
-            %     \includegraphics[scale=0.2]{images/solution_images/2D_XY_initial_inverted.png}
-            %     \caption{Initial position of the source image and the target image.}
-            %     \label{fig:2D_initial}
-            % \end{figure}
 
             \begin{figure}\centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_initial, connect zoomboxes]
@@ -224,12 +189,6 @@
                 \label{fig:2D_initial}
             \end{figure}
 
-            % \begin{figure}[H]
-            %     \centering
-            %     \includegraphics[scale=0.2]{images/solution_images/2D_XY_alignment_inverted.png}
-            %     \caption{Source image and target image aligned.}
-            %     \label{fig:2D_aligned}
-            % \end{figure}
 
             \begin{figure}\centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_aligned, connect zoomboxes]
