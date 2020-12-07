@@ -67,6 +67,8 @@
 \usepackage{lipsum} % Used to test
 \usepackage{lmodern}%
 \usepackage{float}
+\usepackage{diagbox}
+\usepackage{makecell}
 
 \usepackage{caption}
 \usepackage{tikz}
