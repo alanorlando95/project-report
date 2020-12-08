@@ -37,7 +37,7 @@
     \section{Proposed algorithm}
         The main steps of the proposed algorithm are listed as follows:
         \begin{enumerate}
-            \itemsep 0em 
+            % \itemsep 0mm
             \item Projection of the point cloud onto the xy-plane.
             \item Projection of the 3D model onto the xy-plane.
             \item Detection of line segments.
@@ -57,7 +57,13 @@
             the z-axis of the source and the target is already correctly aligned.
             Which allows for a direct projection of the source onto the xy-plane to detect walls.
 
-            \begin{figure}\centering
+            To project the source onto the xy-plane, one can create an empty image with enough size for the source and the target to fit.
+            Then, one can sum the number of points in the source with the same x- and y-coordinates and write the result in the corresponding pixel in the image.
+            In this way, we can obtain a view of the source from bellow where line segments depict walls.
+            \autoref{fig:source_image} shows the image obtained after the projection of the source.
+            
+            \begin{figure}[H]
+                \centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.12]{images/solution_images/source_image_inverted.png} };
                     \zoombox[magnification=3, color code=blue]{0.45,0.52}
@@ -65,21 +71,6 @@
                 \caption{Projection of the source onto the xy-palne.}
                 \label{fig:source_image}
             \end{figure}
-
-            \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_image, connect zoomboxes]
-                    \node [image node] { \includegraphics[scale=0.12]{images/solution_images/target_image_inverted.png} };
-                    \zoombox[magnification=3, color code=green]{0.4,0.57}
-                \end{tikzpicture}
-                \caption{Projection of the target onto the xy-palne.}
-                \label{fig:target_image}
-            \end{figure}
-
-            To project the source onto the xy-plane, one can create an empty image with enough size for the source and the target to fit.
-            Then, one can sum the number of points in the source with the same x- and y-coordinates and write the result in the corresponding pixel in the image.
-            In this way, we can obtain a view of the source from bellow where line segments depict walls.
-            \autoref{fig:source_image} shows the image obtained after the projection of the source.
-            
 
     %-------------------------------------------------------------------------------
     %	Projection the 3D model onto the xy-plane
@@ -94,13 +85,28 @@
 
             \autoref{fig:target_image} shows the image obtained after this process.
 
-            
+            \begin{figure}[H]
+                \centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_image, connect zoomboxes]
+                    \node [image node] { \includegraphics[scale=0.12]{images/solution_images/target_image_inverted.png} };
+                    \zoombox[magnification=3, color code=green]{0.4,0.57}
+                \end{tikzpicture}
+                \caption{Projection of the target onto the xy-palne.}
+                \label{fig:target_image}
+            \end{figure}
     %-------------------------------------------------------------------------------
     %	Detection of line segments
     %-------------------------------------------------------------------------------
         \subsection{Detection of line segments}
-
-            \begin{figure}\centering
+            The projections of the source and the target are now 2D images. 
+            The source image could be noisy, but the target is clear and the line segments that represent the walls are very well defined.
+            Therefore, to deal with the noise and remark the line segments of the source image an implementation of the technique proposed 
+            by Chaudhuri et al. \cite{Chaudhuri_1989_detection}, to detect blood vessels in retinal images, together with a binary threshold is used. 
+            The implementation of \cite{Chaudhuri_1989_detection} used is the one provided by DIPlib \cite{DIPlib_library}.
+            \autoref{fig:source_image_filter} shows the result after the filter is applied to \autoref{fig:source_image}.
+            
+            \begin{figure}[H]
+                \centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image_filter, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.12]{images/solution_images/filter_inverted.png} };
                     \zoombox[magnification=3, color code=blue]{0.45,0.52}
@@ -108,13 +114,6 @@
                 \caption{Source image after filter.}
                 \label{fig:source_image_filter}
             \end{figure}
-        
-            The projections of the source and the target are now 2D images. 
-            The source image could be noisy, but the target is clear and the line segments that represent the walls are very well defined.
-            Therefore, to deal with the noise and remark the line segments of the source image an implementation of the technique proposed 
-            by Chaudhuri et al. \cite{Chaudhuri_1989_detection}, to detect blood vessels in retinal images, together with a binary threshold is used. 
-            The implementation of \cite{Chaudhuri_1989_detection} used is the one provided by DIPlib \cite{DIPlib_library}.
-            \autoref{fig:source_image_filter} shows the result after the filter is applied to \autoref{fig:source_image}.
 
             Line segments in both images are detected using the probabilistic hough line transform of OpenCV \cite{opencv_library}.
             The number of line segments is reduced in four steps. 
@@ -130,25 +129,7 @@
     %-------------------------------------------------------------------------------
         \subsection{Detection of line intersections and their angles}
         \label{sub:Detection of line intersections and their angles}
-            \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_intersections, connect zoomboxes]
-                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/source_intersections_inverted.png} };
-                    \zoombox[magnification=3, color code=blue]{0.45,0.52}
-                \end{tikzpicture}
-                \caption{Source lines and intersections.}
-                \label{fig:source_intersections}
-            \end{figure}
-
-
-            \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_intersections, connect zoomboxes]
-                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/target_intersections_inverted.png} };
-                    \zoombox[magnification=3, color code=green]{0.4,0.57}
-                \end{tikzpicture}
-                \caption{Target lines and intersections.}
-                \label{fig:target_intersections}
-            \end{figure}
-
+        
             The line segments are converted to their homogeneous representation, 
             and the intersections between them are calculated using the cross product as described in \cite{Hartley_2003_multiple_Book}.
             Only the intersections that are in the line segments are taken into account.
@@ -158,6 +139,25 @@
             as described in \autoref{section:Registration Problem in 2D}. 
             \autoref{fig:source_intersections} shows $P$ and \autoref{fig:target_intersections} shows $Q$.
 
+            \begin{figure}[H]
+                \centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_intersections, connect zoomboxes]
+                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/source_intersections_inverted.png} };
+                    \zoombox[magnification=3, color code=blue]{0.45,0.52}
+                \end{tikzpicture}
+                \caption{Source lines and intersections.}
+                \label{fig:source_intersections}
+            \end{figure}
+
+            \begin{figure}[H]
+                \centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_intersections, connect zoomboxes]
+                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/target_intersections_inverted.png} };
+                    \zoombox[magnification=3, color code=green]{0.4,0.57}
+                \end{tikzpicture}
+                \caption{Target lines and intersections.}
+                \label{fig:target_intersections}
+            \end{figure}
 
     %-------------------------------------------------------------------------------
     %	Identification of possible correspondences between angles detected
@@ -181,25 +181,6 @@
         \subsection{Alignment of both projections onto the xy-plane}
             \label{sub:Alignment of both projections onto the xy-plane}
 
-            \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_initial, connect zoomboxes]
-                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/2D_XY_initial_inverted.png} };
-                    \zoombox[magnification=3, color code=yellow]{0.4,0.57}
-                \end{tikzpicture}
-                \caption{Initial position of the source image and the target image.}
-                \label{fig:2D_initial}
-            \end{figure}
-
-
-            \begin{figure}\centering
-                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_aligned, connect zoomboxes]
-                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/2D_XY_alignment_inverted.png} };
-                    \zoombox[magnification=3, color code=yellow]{0.4,0.57}
-                \end{tikzpicture}
-                \caption{Source image and target image aligned.}
-                \label{fig:2D_aligned}
-            \end{figure}
-
             The Mixed Integer Linear Program of \autoref{section:Registration Problem as Mixed Integer Linear Program} is solved with the intersections detected.
             The objective is changed to speed up the Mixed Integer Linear Program. The new objective is to maximize
 
@@ -219,7 +200,27 @@
 
             Because the source image and the target image are a projection onto the xy-plane of the source and the target, respectively,
             $T$ is used to align the source and the target on the x-axis and the y-axis by expanding it into the $SE(3)$.
+            
+            \begin{figure}[H]
+                \centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_initial, connect zoomboxes]
+                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/2D_XY_initial_inverted.png} };
+                    \zoombox[magnification=3, color code=yellow]{0.4,0.57}
+                \end{tikzpicture}
+                \caption{Initial position of the source image and the target image.}
+                \label{fig:2D_initial}
+            \end{figure}
 
+
+            \begin{figure}[H]
+                \centering
+                \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_aligned, connect zoomboxes]
+                    \node [image node] { \includegraphics[scale=0.1]{images/solution_images/2D_XY_alignment_inverted.png} };
+                    \zoombox[magnification=3, color code=yellow]{0.4,0.57}
+                \end{tikzpicture}
+                \caption{Source image and target image aligned.}
+                \label{fig:2D_aligned}
+            \end{figure}
     %-------------------------------------------------------------------------------
     %	Alignment on the z-axis
     %-------------------------------------------------------------------------------
