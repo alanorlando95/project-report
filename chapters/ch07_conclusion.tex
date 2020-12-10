@@ -12,21 +12,30 @@
 %	Contributions
 %-------------------------------------------------------------------------------
     \section{Contributions}
-        The main contribution of this work is a coarse registration method for a 3D model and a point cloud
-        that converts the 3D registration task into a 2D registration task and works based on the intersection of lines and their angle information.
-        Furthermore, the solution presented can be adapted to be used with different kind of 2D features. 
+        This work’s main contribution is a coarse registration method for a 3D model and a point cloud 
+        that converts the 3D registration task into a 2D registration task and works based on the intersection of lines and their angle information. 
+        Furthermore, the solution presented can be adapted to be used with different kinds of 2D features.
+    
+        In addition to this work’s scientific contributions, 
+        it also contributes to the A-DRZ project as an automatic registration method for their visualization system, 
+        helping rescue services to obtain an overview of the current status of possible dangerous situations.
+    
 
 %-------------------------------------------------------------------------------
 %	Lessons learned
 %-------------------------------------------------------------------------------
     \section{Lessons learned}
-        - Opend3D offers a user-friendly interface to work with point clouds and 3D models. \par
-        -
+        When doing research, it is essential to keep the eyes open and try to link ideas between different papers. 
+        That could help to combine existing methods to come up with improved solutions for a problem. 
+        Moreover, the research should not necessarily be focused on one specific field, 
+        and sometimes it is needed to take a look at ideas of different fields.
 
-        - How to make a research in a specific field. \par
-        - How to work in a project that already has many specifications defined. \par
-        - How to work with third-party libraries in order to ease the implementation of a project. \par
-        - How to adapt yourself to the changes in the requirements of a project. \par
+        The use of appropriate libraries can simplify and reduce the work implementing long solutions, like the one presented in this work. 
+        Moreover, they might also reduce the running time of the system because their implementation is usually optimized. 
+    
+        When working within the limits of an already existing project, such as the A-DRZ, 
+        one should search for a solution that fits the project’s conditions. 
+        Furthermore, one should be ready to adapt the work to sudden changes.
     
 %-------------------------------------------------------------------------------
 %	Future work
@@ -41,7 +50,7 @@
         i.e., the orientation of the sum of the line segments that form the angle.
         Moreover, other kinds of features can be included. For example, the lines or even other corners that are not necessarily intersections of lines.
 
-        Two additional options could be tested to improve the system’s performance in the future. 
+        Two additional options could be tried to improve the system’s performance in the future. 
         Firstly, one could work with 3D features and find directly a 3D transformation that aligns the CityGML model and the point cloud. 
         Secondly, a Branch-and-Bounding approach \cite{Bazin_2013_abranchandbound,Breuel_2003_implementation,Brown_2015_globally,Brown_2019_afamily} 
         could be applied to search for a transformation that aligns the projections of the CityGML model and the point cloud onto the xy-plane 
