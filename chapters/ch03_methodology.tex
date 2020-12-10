@@ -116,10 +116,18 @@
     \section{Registration Problem as Mixed Integer Linear Program}
     \label{section:Registration Problem as Mixed Integer Linear Program}
         The 3D registration problem defined in \autoref{section:Registration Problem in 3D} can be redefined as a Mixed Integer Linear Program.
-        The exact definition is given in \cite{Sakakubara_2007_automatic}.
+        The exact definition is given in \cite{Sakakubara_2007_automatic}. Furthermore, the 2D registration problem defined in \autoref{section:Registration Problem in 2D}
+        can be redefined as a Mixed Integer Linear Program in the same way.
+        
+        There is a matrix $X \in \mathbb{R}^{N \times M}$ that represents the correspondences between $P$ and $Q$.
+        That means that $x_{ij} = 1$ if the point $p_i$ in the source image corresponds to the point $q_j$ in the target image, otherwise $x_{ij} = 0$.
 
-        The 2D registration problem defined in \autoref{section:Registration Problem in 2D} can be redefined as a Mixed Integer Linear Program in the same way.
-        The objective is to maximize
+        Then, there should be a homogeneous transformation $T$ that transforms the point $p_i$ into the points $q_j$, for all $i, j$ where $x_{ij} = 1$.
+        That means there is loss function $L = (q_i - T p_i)$ that should be less than a given threshold $\epsilon_d$
+        for all $i, j$ where $x_{ij} = 1$. The constant $\epsilon_d$ can be seen as a threshold that removes outliers.
+        In other words, $\epsilon_d$ is the maximum distance allowed between a target point and its corresponding source point after transformation
+
+        More formally, the objective of the Mixed Integer Linear Program is to maximize
         
         \begin{equation}
             \label{eq:objective_original}
@@ -176,12 +184,6 @@
         \end{equation}
         
 
-        $X \in \mathbb{R}^{N \times M}$ is the matrix that represents the correspondences.
-        That means that $x_{ij} = 1$ if the point $p_i$ in the source image corresponds to the point $q_j$ in the target image, otherwise $x_{ij} = 0$.
-
-        $L = (q_i - T p_i)$ and the constant $\epsilon_d$ is a threshold to remove outliers. 
-        In other words, $\epsilon_d$ is the maximum distance allowed between a target point and its corresponding source point after transformation.
-
         The constant $b$ is some large number. For example, $b$ can be two times the maximum distance between points in the source and the target image.
 
         The \autoref{eq:subject_lines_preservation} is used to preserve lines between points after the transformation.
@@ -191,6 +193,5 @@
 
         The elements of $T$ are constrained in \autoref{eq:subject_transformation_variables},
         but the rest of the elemnts are constant: $t_{31} = 0$, $t_{32} = 0$, and $t_{33} = 1$.
-        
           
 \end{document}

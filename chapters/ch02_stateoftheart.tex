@@ -19,7 +19,30 @@
     \autoref{fig:classification} shows an overview of the classification of the papers reviewed.
     
     \begin{figure}[H]
-        \includegraphics[width=\textwidth]{images/Classification.jpg}
+    \centering
+        \begin{tikzpicture}[->, >=latex]
+            \matrix [column sep=7mm, row sep=5mm,
+            nodes={rectangle, draw}] { 
+            & &
+              \node (rm) [fill=green, anchor = base west, xshift=-0.51cm, yshift=-0.5cm] {Registration methods}; \\
+              \node (ptp) [fill=orange, anchor=base west] {point-to-point}; & &
+              \node (ptm) [fill=orange, anchor=base west] {point-to-model}; & &
+              \node (ot) [fill=orange, align=center, right= of ptm.north east, anchor= north west] {others\\ \cite{Breuel_2003_implementation, Bazin_2013_abranchandbound, Brown_2015_globally, Brown_2019_afamily, Windheuser_2011_largescale}}; \\
+              \node (ptpg) [fill=cyan, anchor=base west, align=center] {global\\ \cite{Pankaj_2015_arobust, Quan_2020_com, Sakakubara_2007_automatic, Wang_2019_deepclosest, Sarode_2019_oneframework, Huang_2020_feature} }; & &
+              \node (ptms) [fill=cyan, anchor=base west, align=center] {sampling\\ \cite{Kim_2011_fully, Kim_2013_fully} }; \\
+              \node (ptpl) [fill=cyan, anchor=base west, align=center] {local\\ \cite{Besl_1992_amethod, Segal_2009_generalizedicp}}; & &
+              \node (ptml) [fill=cyan, anchor=base west, align=center] {local\\ \cite{Li_2015_amodified, Goebbels_2019_icpcitygml, Goebbels_2018_alinear, Goebbels_2018_linebased}}; \\
+              \node (ptph) [fill=cyan, anchor=base west, align=center] {hybrid\\ \cite{Yang_2016_goicp, Lu_2019_4pcsicp, Lu_2019_deepicp, Elbaz_2017_3dpoint}}; \\
+            };
+            \draw[thick] (rm) -| (ptp);
+            \draw[thick] (rm) -- (ptm);
+            \draw[thick] (rm) -| (ot);
+            \draw[thick] (ptp.west) -- ++(-0.5, 0) |- (ptpg.west);
+            \draw[thick] (ptp.west) -- ++(-0.5, 0) |- (ptpl.west);
+            \draw[thick] (ptp.west) -- ++(-0.5, 0) |- (ptph.west);
+            \draw[thick] (ptm.west) -- ++(-0.5, 0) |- (ptms.west);
+            \draw[thick] (ptm.west) -- ++(-0.5, 0) |- (ptml.west);
+        \end{tikzpicture}
         \caption{Classification of the State of the Art.}
         \label{fig:classification}
     \end{figure}
@@ -77,7 +100,7 @@
     %-------------------------------------------------------------------------------
     %	Local methods
     %-------------------------------------------------------------------------------  
-        \subsection{Local methods}
+        \subsection{Local methods} 
 
         Besl and N. D. McKay \cite{Besl_1992_amethod} propose the Iterative Closest Point (ICP) algorithm to perform registration 
         between point sets, line segments, implicit curves, parametric curves, triangles, implicit surfaces, and parametric surfaces.
@@ -97,7 +120,7 @@
     %-------------------------------------------------------------------------------
     %	Hybrid methods
     %-------------------------------------------------------------------------------  
-        \subsection{Hybrid methods}
+        \subsection{Hybrid methods} 
 
         The results of the global methods can be refined with the use of a local method, most of the time a variation of the popular ICP.
         In this category, some of these methods can be found.
@@ -107,23 +130,11 @@
         Go-ICP guarantees global optimality regardless of the initialization and it is recommended for scenarios where real-time performance is not critical.
 
         The approach proposed by Jun Lu et al. \cite{Lu_2019_4pcsicp} extracts keypoints from the point clouds, 
-        then it obtains four optimal consistent points from the key points by using Super4PCS \cite{Mellado_2014_super4pcs},  
-        afterwards it creates a neighborhood ball with each point as its center and obtains the overlapping regions as the intersections of these neighborhood balls. 
-        Finally, ICP is applied to the overlapping regions. 
-        The main drawback of this method is that there overlapping regions should exist to perform the registration task.
-
-        The approach proposed by Jun Lu et al. \cite{Lu_2019_4pcsicp} extracts keypoints from the point clouds, 
         then it obtains four optimal point correspondences from the key points by using Super4PCS \cite{Mellado_2014_super4pcs},
         i.e., the four-point correspondences that minimize the number of outliers. 
         Afterward, it creates a neighborhood ball with each point as its center and obtains these neighborhood balls’ overlapping regions. 
         Finally, it applies ICP to the overlapping regions. 
         The main drawback of this method is that overlapping regions should exist to perform the registration task.
-
-        The approach proposed by Jun Lu et al. [2] extracts keypoints from the point clouds, 
-        then it obtains four optimal point correspondences from the key points by using Super4PCS [5], i.e., the four-point correspondences that minimize the number of outliers. 
-        Afterward, it creates a neighborhood ball with each point as its center and obtains the overlapping regions as these neighborhood balls’ intersections. 
-        Finally, it applies ICP is to the overlapping regions. 
-        The main drawback of this method is that there overlapping regions should exist to perform the registration task.
 
         Because of the increasing success of Deep Learning in 2D applications, there have been attempts to use deep neural networks
         to solve the complete point cloud registration problem (global and local registration).
@@ -152,7 +163,7 @@
     %-------------------------------------------------------------------------------
     %	Sampling methods
     %-------------------------------------------------------------------------------  
-        \subsection{Sampling methods}
+        \subsection{Sampling methods} 
 
         In order to register a 3D model with a point cloud, the simpliest idea is to sample points from the 3D model to generate a second point cloud
         and then perform one of the point-to-point registration methods. 
@@ -171,7 +182,7 @@
     %-------------------------------------------------------------------------------
     %	Local methods
     %-------------------------------------------------------------------------------  
-        \subsection{Local methods}
+        \subsection{Local methods} 
 
         Other approaches work directly with the information provided in the 3D models to perform the registration task.
 
@@ -207,7 +218,8 @@
 %-------------------------------------------------------------------------------
 %	Others
 %-------------------------------------------------------------------------------      
-    \section{Others}
+    \section{Others} 
+
     There are other approaches that attempt to solve different matching problems with or without correspondences.
     These approaches cannot be classified in the previous categories because their input data is not composed of two point clouds or one point cloud and a 3D model.
     Some of these approaches are collected into this category.
@@ -234,8 +246,9 @@
 %-------------------------------------------------------------------------------
 %	Limitations of previous work
 %-------------------------------------------------------------------------------
-    \section{Limitations of previous work}
-    ICP and its variants provide simple and easily-implemented iterative methods, but these algorithms can converge to false local optima \cite{Wang_2019_deepclosest}.
+    \section{Limitations of previous work} 
+
+    ICP and its variants provide simple and easily-implemented iterative methods, but these algorithms can converge to false local optima cc.
     Furthermore, they do not scale well with the number of points and they are not differentiable, therefore they cannot be integrated into end-to-end
     deep learning pipelines \cite{Sarode_2019_oneframework}. 
     And the principal disadvantage of these methods is that they require a good initial approximation to the solution to perform well.

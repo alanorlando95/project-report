@@ -73,7 +73,7 @@
 \usepackage{caption}
 \usepackage{tikz}
 \usepackage{pgfplots}
-\usetikzlibrary{spy,calc}
+\usetikzlibrary{spy, calc, positioning}
 
 \onehalfspacing
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
