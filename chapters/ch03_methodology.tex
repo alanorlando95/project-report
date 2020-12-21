@@ -2,22 +2,21 @@
 
 \begin{document}
     \chapter{Methodology}
-        In this section, a brief description of the Data and the definition of the Registration Problem will be given.
-        The structure of a CityGML model is complex, and their complete explanation is out of the scope of this project,
-        For detailed information about CityGML please refer to Gröger et. al \cite{Groger_2012_OGC} or the official websites.
+        In this chapter, a brief description of the Data and the definition of the Registration Problem will be given.
+        The structure of a CityGML model is complex, and their complete explanation is out of the scope of this project.
+        For detailed information about CityGML please refer to Gröger et al. \cite{Groger_2012_OGC} or the official websites.
 
 %-------------------------------------------------------------------------------
 %	Data
 %-------------------------------------------------------------------------------
     \section{Data}   
-        The CityGML models are public data in some states in Germany, for example in Nordrhein-Westfalen \cite{NRW3DModel_online}. 
-        Other states of Germany like Hessen \cite{Hessen3DModel_online} or Bayern \cite{Bayern3DModel_online} charge money for their Models.
+        The CityGML models are public data in some states in Germany, for example, in Nordrhein-Westfalen \cite{NRW3DModel_online}. 
+        Other states of Germany, like Hessen \cite{Hessen3DModel_online} or Bayern \cite{Bayern3DModel_online}, charge money for their Models.
         That is not relevant for this project because the CityGML Models are received from the server of the A-DRZ project.
 
         Besides the representation of the building, CityGML models provide other interesting information about the buildings.
         For this work, the intersection of the model with the terrain is the most relevant information.
-        The terrain intersection is provided as an array of 3D points that represent some points on the walls that intersect with the
-        ground. 
+        The terrain intersection is provided as an array of 3D points representing some points on the walls that intersect the ground. 
         
         The point cloud data is collected and provided by the A-DRZ project partners that develop and operate the actual Robots.
         These are mainly the University of Bonn \cite{UniBonn_online} and the Technical University of Darmstadt \cite{TUDarmstadt_online},
@@ -88,8 +87,8 @@
             \sum_{i = 1}^{N} \min_{j \in {1...M}} d( T p_i , q_j )    
         \end{equation}
           
-        where $d(T p_i, q_j)$ is the Euclidian distance between $H p_i$ and $q_j$.
-        $p_i$ and $q_j$ are points in homogeneous coordinates. Therefore, their fourth element is $1$.
+        where $d(T p_i, q_j)$ is the Euclidian distance between $T p_i$ and $q_j$.
+        The points $p_i$ and $q_j$ are points in homogeneous coordinates. Therefore, their fourth element is $1$.
 
         In this case, the point set $P$ corresponds to the point cloud, while the point set $Q$ corresponds to the CityGML model.
         It is clear that $P$ is formed by the same points that form the point cloud, 
@@ -111,9 +110,9 @@
         Again, $p_i$ and $q_j$ are points in homogeneous coordinates and their third element is always $1$.
 
 %-------------------------------------------------------------------------------
-%	Registration Problem as Mixed Integer Linear Program
+%	Registration Problem as a Mixed Integer Linear Program
 %-------------------------------------------------------------------------------
-    \section{Registration Problem as Mixed Integer Linear Program}
+    \section{Registration Problem as a Mixed Integer Linear Program}
     \label{section:Registration Problem as Mixed Integer Linear Program}
         The 3D registration problem defined in \autoref{section:Registration Problem in 3D} can be redefined as a Mixed Integer Linear Program.
         The exact definition is given in \cite{Sakakubara_2007_automatic}. Furthermore, the 2D registration problem defined in \autoref{section:Registration Problem in 2D}
@@ -122,10 +121,10 @@
         There is a matrix $X \in \mathbb{R}^{N \times M}$ that represents the correspondences between $P$ and $Q$.
         That means that $x_{ij} = 1$ if the point $p_i$ in the source image corresponds to the point $q_j$ in the target image, otherwise $x_{ij} = 0$.
 
-        Then, there should be a homogeneous transformation $T$ that transforms the point $p_i$ into the points $q_j$, for all $i, j$ where $x_{ij} = 1$.
+        Then, there should be a homogeneous transformation $T$ that transforms the point $p_i$ into the point $q_j$, for all $i, j$ where $x_{ij} = 1$.
         That means there is loss function $L = (q_i - T p_i)$ that should be less than a given threshold $\epsilon_d$
         for all $i, j$ where $x_{ij} = 1$. The constant $\epsilon_d$ can be seen as a threshold that removes outliers.
-        In other words, $\epsilon_d$ is the maximum distance allowed between a target point and its corresponding source point after transformation
+        In other words, $\epsilon_d$ is the maximum distance allowed between a target point and its corresponding source point after transformation.
 
         More formally, the objective of the Mixed Integer Linear Program is to maximize
         
@@ -184,7 +183,8 @@
         \end{equation}
         
 
-        The constant $b$ is some large number. For example, $b$ can be two times the maximum distance between points in the source and the target image.
+        The constant $b$ is some large number. For example, $b$ can be two times the maximum distance between points of the source image
+        or points of the target image.
 
         The \autoref{eq:subject_lines_preservation} is used to preserve lines between points after the transformation.
         If $\mid d(p_i, p_k) - d(q_j, q_l) \mid \geq \epsilon_l$, then either $p_i$ corresponds to $q_j$ or $p_k$ corresponds to $q_l$.

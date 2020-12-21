@@ -4,16 +4,16 @@
     \chapter{Results and Evaluation}
 
     In this chapter, the results of the registration of the available data using the solution presented in \autoref{chap:Solution} will be presented and discussed.
-    The data was visulized with the 3D visualization provided by Open3D.    
+    The data was visualized and evaluated with the use of the 3D visualization provided by Open3D.
 
     The running times presented in \autoref{table:running_time} were taken on an Intel Core i7-1065G7 3.9GHz with 16 GB RAM.
     The most time-consuming task with the CityGML model is the detection of line segments.
     In comparison, the most time-consuming task with the PLY model is the alignment of both projections onto the xy-plane (the Mixed Integer Linear Program).
 
-    These running times are obtained with the assumption that the position of the point cloud is not far away from the position of the 3D model as described in 
-    \autoref{sub:Identification of possible correspondences between angles detected}. 
-    If these assumption is not considered, then the running time of the Mixed Integer Linear Program is
-    increased to 6.682 seconds for the CityGML model and to 32.906 seconds for the PLY model.
+    These running times are obtained with the assumption that the position of the point cloud is not far away from the position of the 3D model, 
+    as described in \autoref{sub:Identification of possible correspondences between angles detected}. 
+    If this assumption is not considered, then the Mixed Integer Linear Program’s running time 
+    is increased to 6.682 seconds for the CityGML model and 32.906 seconds for the PLY model.
 
     \begin{table}[h!]
         \centering
@@ -59,21 +59,21 @@
             \end{bmatrix}
         \end{equation*}
 
-        and the results after applying this transformation to the point cloud are showed in \autoref{fig:final_CityGML}.
+        and the results after applying this transformation to the point cloud are shown in \autoref{fig:final_CityGML}.
         In the transformation, one can observe a rotation around the z-axis and a translation across the x-, y-, and z-axis.
 
         \begin{figure}[H]
             \centering
             \begin{subfigure}{1\textwidth}
                 \centering
-                \includegraphics[scale=0.2]{images/solution_images/final_front.png}
+                \includegraphics[scale=0.15]{images/solution_images/final_front.png}
                 \caption{Front view.}
                 \label{fig:final_front_model}
             \end{subfigure}
             \hfill
             \begin{subfigure}{1\textwidth}
                 \centering
-                \includegraphics[scale=0.2]{images/solution_images/final_back.png}
+                \includegraphics[scale=0.15]{images/solution_images/final_back.png}
                 \caption{Back view.}
                 \label{fig:final_back_model}
             \end{subfigure}
@@ -83,7 +83,7 @@
         
         The alignment of the CityGML model with the point cloud can be seen in the fire exercise building (the one in the center of the image)
         and the right building in \autoref{fig:final_front_model}. The walls and the ceilings are correctly overlapped in both buildings.
-        There is only a slight misalignment in the center part of the ceil of the fire exercise building because the CityGML model is outdated.
+        There is only a slight misalignment in the center part of the fire exercise building’s ceil because the CityGML model is outdated.
 
 %-------------------------------------------------------------------------------
 %	Registration of a PLY model with a point cloud
@@ -99,14 +99,14 @@
             \centering
             \begin{subfigure}{1\textwidth}
                 \centering
-                \includegraphics[scale=0.2]{images/solution_images/initial_ply_a.png}
+                \includegraphics[scale=0.15]{images/solution_images/initial_ply_a.png}
                 \caption{Frist view.}
                 \label{fig:intial_ply_a}
             \end{subfigure}
             \hfill
             \begin{subfigure}{1\textwidth}
                 \centering
-                \includegraphics[scale=0.2]{images/solution_images/initial_ply_b.png}
+                \includegraphics[scale=0.15]{images/solution_images/initial_ply_b.png}
                 \caption{Second view.}
                 \label{fig:intial_ply_b}
             \end{subfigure}
@@ -126,7 +126,7 @@
             \end{bmatrix}    
         \end{equation*}
         
-        and the results after applying this transformation to the point cloud are showed in \autoref{fig:final_ply}.        
+        and the results after applying this transformation to the point cloud are shown in \autoref{fig:final_ply}.        
 
         In the transformation, one can observe a rotation around the z-axis and a translation across the x-, y-, and z-axis.
         This time, the translation across the z-axis is considerably larger than the one in $T_1$.
@@ -140,14 +140,14 @@
             \centering
             \begin{subfigure}{1\textwidth}
                 \centering
-                \includegraphics[scale=0.2]{images/solution_images/final_ply_a.png}
+                \includegraphics[scale=0.15]{images/solution_images/final_ply_a.png}
                 \caption{First view.}
                 \label{fig:final_ply_a}
             \end{subfigure}
             \hfill
             \begin{subfigure}{1\textwidth}
                 \centering
-                \includegraphics[scale=0.2]{images/solution_images/final_ply_b.png}
+                \includegraphics[scale=0.15]{images/solution_images/final_ply_b.png}
                 \caption{Second view.}
                 \label{fig:final_ply_b}
             \end{subfigure}
@@ -159,10 +159,10 @@
 %	Discussion
 %-------------------------------------------------------------------------------
     \section{Discussion}
-        The results presented in the two past sections depend on the step described in 
+        The results presented in the two past sections highly depend on the step described in 
         \autoref{sub:Detection of line intersections and their angles}, i.e., on detecting lines and their intersections.
         If the number of intersections detected is poor, then the registration results could be wrong.
-        And the accuracy of the registration result depends on the accuracy with which the position of the intersections is detected.
+        Furthermore, the accuracy of the registration result depends on the accuracy with which the position of the intersections is detected.
         Therefore, if no lines and no intersections are detected, then no registration is possible.
 
         The different running times presented in \autoref{table:running_time} could be due to the size of the point clouds. 

@@ -5,38 +5,43 @@
     \label{chap:Solution}
         Due to causes unrelated to this project, the available data was just one CityGML model and its corresponding point cloud.
         Therefore, a solution was designed based on this data and its characteristics.
-
         Moreover, at the time this work was started, there was no GPS information of the point clouds used in the registration, just of the CityGML model. 
-        Therefore, it was not possible to perform a coarse registration with GPS information and the coarse registration need to be done by other means.
-        All this together made deciding on a specific approach difficult.
+        Therefore, it was not possible to perform a coarse registration with GPS information.
+        All of this together made it difficult to decide which approach to use.
 
-        Later, in the middle phase of the project, another point cloud was available but its corresponding CityGML model was not.
+        Later, in the middle phase of the project, another point cloud was available, but its corresponding CityGML model was not.
         However, instead of a CityGML model, a 3D model of the site was available in Polygon File Format (ply).
-        Because of the different information contained in the PLY file a different preprocessing was needed.
+        Because of the different information contained in the PLY file, a different preprocessing was needed.
 
-        Although (deep) learning methods are very attractive due to their boom in recent years,
-        they are unthinkable to solve our problem. The main reason for this is the data needed to train such an approach.
+        Although (deep) learning methods are very attractive due to their boom in many 2D and 3D applications in recent years, 
+        they are unthinkable to solve our problem. The main reason for this is the data needed to train such an approach. 
+        Therefore, and because of the time needed to collect enough data to think about a (deep) learning method, 
+        a more traditional method needs to be used.
 
-        Goebbels et al. \cite{Goebbels_2018_linebased, Goebbels_2018_alinear} successfully propose the use of Mixed Integer Linear Programming to register
-        a point cloud with a CityGML model, based on lines and points.
-        Mixed Interger Linear Programming has been used to solve other registration problems
+        The first thought was to apply a built-in registration method of Opend3D. 
+        Therefore, Open3D’s implementations of point-to-point ICP, point-to-model ICP, and RANSAC were tried, unfortunately without success. 
+        The reason was probably the difference of information contained in the point clouds and the 3D models. 
+        The 3D models contain complete buildings but do not contain any information about the ground or objects outside the buildings. 
+        In contrast, the point clouds mainly contain information about the ground and the objects outside the buildings, 
+        but they just contain partial information about the buildings, usually a couple of walls.
+
+        Goebbels et al. \cite{Goebbels_2018_linebased, Goebbels_2018_alinear} face a similar problem with the difference of information in the data 
+        and successfully propose using Mixed Integer Linear Programming to register a point cloud with a CityGML model based on lines and points.
+        Mixed Integer Linear Programming has been used to solve other registration problems
         like the registration between two point clouds \cite{Sakakubara_2007_automatic},
         registration between 3D shapes \cite{Windheuser_2011_largescale},
         and 2D registration \cite{Bazin_2013_abranchandbound}.
-
         Therefore, the solution proposed is to detect the walls in the point cloud and the 3D model by projecting both onto the xy-plane,  
         and then use the angles of the corners of the walls (where the walls intersect)
         in a Mixed Integer Linear Program to find correspondences and a transformation that aligns the point cloud with the 3D Model at the same time.
-        The exact details are given in the next section.
-
-        From now on, the point cloud could be referred to as the source, and the 3D model as the target.
+        The exact details are given in the next sections.
      
 %-------------------------------------------------------------------------------
 %	Proposed algorithm
 %-------------------------------------------------------------------------------
     \section{Proposed algorithm}
         The main steps of the proposed algorithm are listed as follows:
-        \begin{enumerate}
+        \begin{enumerate}[nosep]
             % \itemsep 0mm
             \item Projection of the point cloud onto the xy-plane.
             \item Projection of the 3D model onto the xy-plane.
@@ -47,19 +52,21 @@
             \item Alignment on the z-axis.
         \end{enumerate}
 
+        The point cloud was downsampled before the first step to speed up the solution. However, this step is optional.
+        From now on, the point cloud will be referred to as the source, and the 3D model as the target.
     %-------------------------------------------------------------------------------
     %	Projection of the point cloud onto the xy-plane
     %-------------------------------------------------------------------------------
         \subsection{Projection of the point cloud onto the xy-plane}
         \label{sub:Projection of the point cloud onto the xy-plane}
-            To simplify the registration task, this is transported from the 3D space to the 2D space.
+            The registration task is transported from the 3D space to the 2D space in order to simplify it.
             As we can see in \autoref{fig:initial_front_model} and \autoref{fig:initial_back_model}, 
-            the z-axis of the source and the target is already correctly aligned.
-            Which allows for a direct projection of the source onto the xy-plane to detect walls.
+            the source’s z-axis and the target’s z-axis are already correctly aligned, 
+            which allows for a direct projection of the source onto the xy-plane to detect walls.
 
             To project the source onto the xy-plane, one can create an empty image with enough size for the source and the target to fit.
             Then, one can sum the number of points in the source with the same x- and y-coordinates and write the result in the corresponding pixel in the image.
-            In this way, we can obtain a view of the source from bellow where line segments depict walls.
+            In this way, we can obtain a view of the source from below, where line segments depict walls.
             \autoref{fig:source_image} shows the image obtained after the projection of the source.
             
             \begin{figure}[H]
@@ -81,7 +88,7 @@
 
             Fortunately, the CityGML model already provides a terrain intersection.
             From this terrain intersection, only the x- and y-coordinates are used to make the projection.
-            In an empty image, line segments are drawn from point to point so that a footprint is obtained.
+            In an empty image, line segments are drawn from point to point to obtain a footprint.
 
             \autoref{fig:target_image} shows the image obtained after this process.
 
@@ -99,10 +106,11 @@
     %-------------------------------------------------------------------------------
         \subsection{Detection of line segments}
             The projections of the source and the target are now 2D images. 
-            The source image could be noisy, but the target is clear and the line segments that represent the walls are very well defined.
-            Therefore, to deal with the noise and remark the line segments of the source image an implementation of the technique proposed 
-            by Chaudhuri et al. \cite{Chaudhuri_1989_detection}, to detect blood vessels in retinal images, together with a binary threshold is used. 
-            The implementation of \cite{Chaudhuri_1989_detection} used is the one provided by DIPlib \cite{DIPlib_library}.
+            The source image could be noisy, but the target is clear, and the line segments that represent the walls are very well defined.
+            Therefore, to deal with the noise and remark the line segments of the source image, an implementation of the technique proposed 
+            by Chaudhuri et al. \cite{Chaudhuri_1989_detection} provided by DIPlib \cite{DIPlib_library}, 
+            to detect blood vessels in retinal images, together with a binary threshold is used. 
+            
             \autoref{fig:source_image_filter} shows the result after the filter is applied to \autoref{fig:source_image}.
             
             \begin{figure}[H]
@@ -117,12 +125,12 @@
 
             Line segments in both images are detected using the probabilistic hough line transform of OpenCV \cite{opencv_library}.
             The number of line segments is reduced in four steps. 
-            Firstly, short line segments are deleted, i.e. line segments with lengths lower than a given threshold.
-            Secondly, line segment s with similar slopes are identified. 
+            Firstly, short line segments are deleted, i.e., line segments with lengths lower than a given threshold.
+            Secondly, line segments with similar slopes are identified. 
             Then, from this set of line segments, subsets of line segments with close starting and ending points are created,
             and only the longest one of each set is preserved. The rest of the line segments are deleted.
             Thirdly, line segments with similar inclination angles are detected, and the same as in the second step is done.
-            Finally, line segments with similar angles that are too close are merged by eliminating or extending one of the line segments.
+            Finally, line segments that are too close and have similar inclination angles are merged by eliminating or extending one of the line segments.
 
     %-------------------------------------------------------------------------------
     %	Detection of line intersections and their angles
@@ -137,7 +145,7 @@
 
             The intersections detected in the source image and the target image are now the set of points $P$ and $Q$, respectively, 
             as described in \autoref{section:Registration Problem in 2D}. 
-            \autoref{fig:source_intersections} shows $P$ and \autoref{fig:target_intersections} shows $Q$.
+            \autoref{fig:source_intersections} shows $P$, and \autoref{fig:target_intersections} shows $Q$.
 
             \begin{figure}[H]
                 \centering
@@ -192,14 +200,15 @@
             subject to the constraints presented in \autoref{section:Registration Problem as Mixed Integer Linear Program}.
             This change in the objective adds additional information about the correspondences and significantly reduces the computation time.
 
-            The Mixed Integer Linear Program is solved and the result is a transformation $T$ that aligns the source image with the target image,
-            and a matrix $X$ that represents the correspondences between $P$ and $Q$.
+            The result of the Mixed Integer Linear Program is a transformation $T$ that aligns the source image with the target image
+            and a matrix $X$ representing the correspondences between $P$ and $Q$.
 
             \autoref{fig:2D_initial} shows the initial position of the source image and the target image.
             \autoref{fig:2D_aligned} shows the result after the transformation of the source image with $T$.
 
-            Because the source image and the target image are a projection onto the xy-plane of the source and the target, respectively,
-            $T$ is used to align the source and the target on the x-axis and the y-axis by expanding it into the $SE(3)$.
+            The source image and the target image are the source’s projection and the target’s projection onto the xy-plane, respectively. 
+            Therefore, $T$ is used to align the source and the target on the x-axis and the y-axis by expanding it into the $SE(3)$.
+
             
             \begin{figure}[H]
                 \centering
@@ -227,7 +236,7 @@
         \subsection{Alignment on the z-axis}
             Sometimes a translation across the z-axis is needed to align the source and the target completely.
             The correspondences found in \autoref{sub:Alignment of both projections onto the xy-plane} 
-            can be used to find the l
+            can be used to find the appropriate translation across the z-axis.
 
             If $x_{ij} = 1$ then the points $p_i$ and $q_j$ are used in the following way.
             The point $p_i$ is used to find the lowest point $p_i^l$ in the source with x- and y-coordinates similar to those of $p_i$.
@@ -240,19 +249,19 @@
 %-------------------------------------------------------------------------------
     \section{Implementation details}
         The solution was implemented with Python. Therefore, the standard library "json" was used to read the CityGML models.
-        Numpy \cite{harris_2020_numpy} was used to compute array operations.
-        Open3d \cite{Zhou_2018_open3d} was used for the visualization of 3D models and point clouds.
-        OpenCV \cite{opencv_library} was used to process images.
-        PyDIP \cite{DIPlib_library} was used to filter the 2D projection of the model and to make the lines more visible. 
-        Python-MIP \cite{pythonMIP_library} was used to solve the Mixed Integer Linear Program described in \autoref{sub:Alignment of both projections onto the xy-plane}.
-
+        Other third-party libraries were used too. Numpy \cite{harris_2020_numpy} was employed to compute array operations, 
+        Open3d \cite{Zhou_2018_open3d} for the visualization of 3D models and point clouds, 
+        OpenCV \cite{opencv_library} to process images, PyDIP to filter the 2D projection of the model and make the lines more visible, 
+        and Python-MIP \cite{pythonMIP_library} to solve the Mixed Integer Linear Program described in \autoref{sub:Alignment of both projections onto the xy-plane}.
+        
         The parameter $\epsilon_d$ used in \autoref{eq:subject_transformation_0}, \autoref{eq:subject_transformation_negative_0}, \autoref{eq:subject_transformation_1}, and \autoref{eq:subject_transformation_negative_1}
-        was set to 20 cm, and the parameter $b$ was set to two times the maximum distance between points in the source and the target image.
+        was set to 20 cm, and the parameter $b$ was set to two times the maximum distance between points of the source image and points of the target image.
         Moreover, the parameter $\epsilon_l$ was set to $\epsilon_l \geq 2 \sqrt{3} \epsilon_l$. 
         
         The upper and lower bounds of $T$ showed in \autoref{eq:subject_transformation_variables} were set as follows: 
         $\delta_1^- = 0.7$, $\delta_1^+ = 1.3$, $\delta_2^- = -0.3$, $\delta_2^+ = 0.3$, $t_x^- = -b / 2$, $t_x^+ = b / 2$, $t_y^- = -b / 2$, and $t_y^+ = b / 2$.
         However, these bounds can be changed to allow a different transformation (different rotation or different translation).
-        Because the universities that provide the point cloud data agreed to send it in a position and orientation close to the model’s position, the parameters chosen allow only a small rotation and a small translation.
+        Because the universities that provide the point cloud data agreed to send it in a position and orientation close to the model’s position, 
+        the chosen parameters allow only a small rotation and a small translation.
 
 \end{document}

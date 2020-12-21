@@ -69,6 +69,7 @@
 \usepackage{float}
 \usepackage{diagbox}
 \usepackage{makecell}
+\usepackage{enumitem}
 
 \usepackage{caption}
 \usepackage{tikz}
