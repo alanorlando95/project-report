@@ -2,7 +2,22 @@
 
 \begin{document}
     \begin{abstract}
-        - INSERT ABSTRACT
-        Algo de abstract
+        Rescue services put their lives at risk trying to save other lives. 
+        Therefore, robots and other new technologies are being used to help them do their meaningful work. 
+        Point clouds can be employed to monitor the current status of a danger area, and CityGML models to depict its ideal status, 
+        supporting rescue services in elaborating an incident action plan. The point cloud and the CityGML model registration is, therefore, of great importance. 
+
+        The existing methods to register a point cloud with a CityGML model do not leverage the CityGML model’s information 
+        or only works when the point cloud and the CityGML model are already coarsely registered.
+
+        In this work, the 3D registration problem was converted into a 2D registration problem 
+        by projecting the point cloud and the CityGML model's terrain intersection into the xy-plane. 
+        In the resulting projection, the lines represented the walls of the 3D space, 
+        and the intersections of the lines and their angle were utilized as features to perform the registration. 
+        A Mixed Integer Linear Program was then utilized to compute the correspondences between the features and a transformation that aligns them. 
+        The obtained transformation was finally extended to be applied in the 3D space.
+        The proposed method successfully performs a coarse registration of a point cloud with a CityGML model. 
+        Moreover, it can be extended to work with other features to increase its accuracy.
+
     \end{abstract}
 \end{document}

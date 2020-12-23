@@ -3,8 +3,8 @@
 \begin{document}
     \chapter{Conclusions}
 
-    The results obtained from the proposed solution are successful. 
-    Although the proposed method provides a coarse registration, it is significant for the A-DRZ project’s proposes. 
+    The results obtained from the proposed solution are successful in the provided data.
+    Although the proposed method provides only a coarse registration, it is significant for the A-DRZ project’s proposes. 
     The registration method is ready to be included in the A-DRZ software of the Fraunhofer IAIS, 
     and whenever there are new point clouds, the method could be further tested and improved.
 
@@ -55,5 +55,11 @@
         Secondly, a Branch-and-Bounding approach \cite{Bazin_2013_abranchandbound,Breuel_2003_implementation,Brown_2015_globally,Brown_2019_afamily} 
         could be applied to search for a transformation that aligns the projections of the CityGML model and the point cloud onto the xy-plane 
         or to search such a transformation directly with 3D features such as planes, lines, or corners.  
+
+        Finally, the registration results can be refined by applying a local registration method. 
+        The local registration can be done with a Linear Program relaxation as presented by Goebbels et al. \cite{Goebbels_2018_alinear, Goebbels_2018_linebased} 
+        or with the ICP variation presented by Goebbels et al. \cite{Goebbels_2019_icpcitygml}, which makes direct use of the CityGML model’s surfaces. 
+        This refinement could bring the point cloud closer to the CityGML model.
+
 
 \end{document}
