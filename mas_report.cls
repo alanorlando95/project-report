@@ -49,6 +49,7 @@
 
 \usepackage[numbers]{natbib}\citeindextrue % Round brackets around citations, change to square for square brackets
 \usepackage{graphicx} % Required to include images
+\usepackage{svg}
 \usepackage{amsmath,amssymb,theorem} % Math packages
 \usepackage{listings} % Required for including snippets of code
 \usepackage{booktabs} % Required for better horizontal rules in tables
