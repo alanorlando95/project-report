@@ -69,7 +69,7 @@
             In this way, we can obtain a view of the source from below, where line segments depict walls.
             \autoref{fig:source_image} shows the image obtained after the projection of the source.
             
-            \begin{figure}[H]
+            \begin{figure}[htp]
                 \centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.12]{images/solution_images/source_image_inverted.png} };
@@ -92,7 +92,7 @@
 
             \autoref{fig:target_image} shows the image obtained after this process.
 
-            \begin{figure}[H]
+            \begin{figure}[htp]
                 \centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_image, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.12]{images/solution_images/target_image_inverted.png} };
@@ -113,7 +113,7 @@
             
             \autoref{fig:source_image_filter} shows the result after the filter is applied to \autoref{fig:source_image}.
             
-            \begin{figure}[H]
+            \begin{figure}[htp]
                 \centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_image_filter, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.12]{images/solution_images/filter_inverted.png} };
@@ -147,7 +147,7 @@
             as described in \autoref{section:Registration Problem in 2D}. 
             \autoref{fig:source_intersections} shows $P$, and \autoref{fig:target_intersections} shows $Q$.
 
-            \begin{figure}[H]
+            \begin{figure}[htp]
                 \centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = source_intersections, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.1]{images/solution_images/source_intersections_inverted.png} };
@@ -157,7 +157,7 @@
                 \label{fig:source_intersections}
             \end{figure}
 
-            \begin{figure}[H]
+            \begin{figure}[htp]
                 \centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = target_intersections, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.1]{images/solution_images/target_intersections_inverted.png} };
@@ -194,7 +194,7 @@
 
             \begin{equation}
                 \label{eq:objective_angles}
-                \sum_{i}^{N} \sum_{j}^{M} x_{ij} m_{ij} 
+                \sum_{i}^{N} \sum_{j}^{M} x_{ij} c_{ij} 
             \end{equation}    
 
             subject to the constraints presented in \autoref{section:Registration Problem as Mixed Integer Linear Program}.
@@ -210,7 +210,7 @@
             Therefore, $T$ is used to align the source and the target on the x-axis and the y-axis by expanding it into the $SE(3)$.
 
             
-            \begin{figure}[H]
+            \begin{figure}[htp]
                 \centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_initial, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.1]{images/solution_images/2D_XY_initial_inverted.png} };
@@ -221,7 +221,7 @@
             \end{figure}
 
 
-            \begin{figure}[H]
+            \begin{figure}[htp]
                 \centering
                 \begin{tikzpicture}[zoomboxarray, zoomboxarray columns=1, zoomboxarray rows=1, figurename = 2D_aligned, connect zoomboxes]
                     \node [image node] { \includegraphics[scale=0.1]{images/solution_images/2D_XY_alignment_inverted.png} };
@@ -256,7 +256,7 @@
         
         The parameter $\epsilon_d$ used in \autoref{eq:subject_transformation_0}, \autoref{eq:subject_transformation_negative_0}, \autoref{eq:subject_transformation_1}, and \autoref{eq:subject_transformation_negative_1}
         was set to 20 cm, and the parameter $b$ was set to two times the maximum distance between points of the source image and points of the target image.
-        Moreover, the parameter $\epsilon_l$ was set to $\epsilon_l \geq 2 \sqrt{3} \epsilon_l$. 
+        Moreover, the parameter $\epsilon_l$ was set to $\epsilon_l \geq 2 \sqrt{3} \epsilon_d$. 
         
         The upper and lower bounds of $T$ showed in \autoref{eq:subject_transformation_variables} were set as follows: 
         $\delta_1^- = 0.7$, $\delta_1^+ = 1.3$, $\delta_2^- = -0.3$, $\delta_2^+ = 0.3$, $t_x^- = -b / 2$, $t_x^+ = b / 2$, $t_y^- = -b / 2$, and $t_y^+ = b / 2$.

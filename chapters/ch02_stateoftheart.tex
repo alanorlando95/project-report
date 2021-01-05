@@ -5,12 +5,12 @@
     \label{chap:State of the Art}
     Point cloud registration algorithms are typically classified into two major categories: global (coarse) registration and local (fine) registration \cite{Quan_2020_com,Kim_2011_fully}.
     Coarse registration algorithms attempt to find a transformation that approximately maps the source point cloud to the target point cloud. 
-    Fine registration algorithms attempt to refine an initial transformation to map the source point cloud to the target point cloud.
+    Fine registration algorithms attempt to refine an initial transformation that maps the source point cloud to the target point cloud.
     Some approaches combine both of these methods; they first apply a global method and then refine the results with the help of a local method. 
-    We can classify these approaches into a third category of hybrid methods. 
+    We can classify these approaches into a third category called hybrid methods. 
     \par
     
-    For the purpose of this work, we can classify point cloud registration algorithms into two major categories:
+    For the purpose of this work, we can also classify point cloud registration algorithms into two other major categories:
     point-to-point and point-to-model.
     Point-to-point registration algorithms attempt to align two point clouds, while point-to-model registration algorithms attempt to align a point cloud with a 3D model.
 
@@ -60,9 +60,9 @@
         In the first step, a number of correspondences, depending on the degrees of freedom of the required transformation, 
         are randomly selected and used to compute a perfect transformation. 
         In the second step, the number of outliers is counted. 
-        If it is under a given percentage, then the algorithm is done. Otherwise, it is repeated from the first step. 
+        If the value is under a given percentage, then the algorithm terminates. Otherwise, it is repeated from the first step. 
         Another stop condition is the number of iterations. 
-        If it is above a given limit, then the algorithm stops, and the transformation with the lower percentage of outliers is selected.
+        If the value is above a given limit, then the algorithm stops, and the transformation with the lower percentage of outliers is selected.
         
         Unfortunately, RANSAC is time-consuming due to its randomness.
         Therefore, Pankaj et al. \cite{Pankaj_2015_arobust} present a guided sampling improvement to RANSAC
@@ -70,9 +70,11 @@
         
         Following the same line, S. Quan and J. Yang \cite{Quan_2020_com} propose a method that helps the RANSAC algorithm 
         sample the best point correspondences. Their approach first detects keypoints using Harris3D, and then it matches the keypoints
-        by using the Local Voxelized Structure (LoVS) descriptor. After that, the set of correspondences is reduced using the 
-        Nearest Neighbor Similarity Ration (NNSR) and the compatibility score of the remaining correspondences with the rigidity and 
-        DSP constraint. Finally, the correspondences with the best compatibility scores are used to generate transformations,
+        by using the Local Voxelized Structure (LoVS) descriptor. 
+        After that, the set of correspondences is reduced using the Nearest Neighbor Similarity Ratio (NNSR) and the compatibility score of the remaining correspondences. 
+        The compatibility score is a function of two constraints: the rigidity constraint and distance between salient points (DSP) constraint, 
+        both of them defined by the authors.
+        Finally, the correspondences with the best compatibility scores are used to generate transformations,
         and the best one (the one with the maximum number of inliers) is the final result. Unfortunately, the RANSAC-based approaches are sensitive to outliers.
 
         Another less common approach for coarse registration is proposed by Sakakubara et al. \cite{Sakakubara_2007_automatic}.
@@ -84,7 +86,7 @@
         Nevertheless, Mixed Integer Linear Programming problems are NP-hard. Therefore, this approach is excessively time-consuming.
 
         Others have proposed the use of neural networks to solve the global registration problem.
-        This is the case of Wang and Solomon \cite{Wang_2019_deepclosest}. They propose a learning-based method called Deep Closest Point (DCP).
+        Wang and Solomon \cite{Wang_2019_deepclosest} propose a learning-based method called Deep Closest Point (DCP).
         The approach proposed first uses PointNet \cite{Qi_2017_pointnetdeep} or DGCNN \cite{Wang_2019_dynamic} to embed the point clouds.
         Then, it uses an attention-based module to encode the output of the first part.
         Finally, it estimates the transformation using a differentiable SVD layer.
@@ -100,7 +102,7 @@
 
         More recently, Huang et al. \cite{Huang_2020_feature} propose a learning method that can be trained in a semi-supervised or unsupervised way.
         The proposed framework is composed of an encoder that extracts features from the input point clouds
-        and a decoder that decodes the extracted features to compute a projection error that serves as input for an algorithm that estimates
+        and a decoder that interprets the extracted features to compute a projection error that serves as input for an algorithm that estimates
         a transformation increment. 
         This increment is then employed to update the parameters of the transformation and transform one of the point clouds.
         The whole process is repeated until the loss computed is less than some desired value.
@@ -118,7 +120,7 @@
         According to Segal et al. \cite{Segal_2009_generalizedicp}, the ICP algorithm can be summarized in two main steps:
         the computation of correspondences between the two scans and 
         the computation of a transformation that minimizes the distance between the corresponding points.
-        They present a generalized version of the ICP algorithm by attaching a probabilistic model to the second step.
+        Segal et al. present a generalized version of the ICP algorithm by attaching a probabilistic model to the second step.
         This generalization makes the algorithm more robust to outliers without modifying the simplicity. 
         However, it does not improve the speed of the original ICP.
 
@@ -130,11 +132,11 @@
     %-------------------------------------------------------------------------------  
         \subsection{Hybrid methods} 
 
-        The results of the global methods can be refined using a local method, most of the time using a variation of the popular ICP.
-        In this category, some of these methods can be found.
+        The global methods results can be refined using a local method, most of the time using a variation of the popular ICP. 
+        In this section, some of these methods that combine a global method with a local one can be found.
 
         Go-ICP is a branch-and-bound (BnB) based approach proposed by Yang et al. \cite{Yang_2016_goicp} to address the susceptibility of ICP to local minima. 
-        The main idea of Go-ICP is that BnB and ICP work iteratively until a global minimum is reached: BnB finds a solution, and this is refined by ICP.
+        The main idea of Go-ICP is that BnB and ICP work iteratively until a global minimum is reached: BnB finds a solution, which is then refined by ICP.
         Go-ICP guarantees global optimality regardless of the initialization, and it is recommended for scenarios where real-time performance is not critical.
 
         The approach proposed by Jun Lu et al. \cite{Lu_2019_4pcsicp} extracts keypoints from the point clouds, 
@@ -142,9 +144,9 @@
         i.e., the four-point correspondences that minimize the number of outliers. 
         Afterward, it creates a neighborhood ball with each point as its center and obtains these neighborhood balls’ overlapping regions. 
         Finally, it applies ICP to the overlapping regions. 
-        The main drawback of this method is that overlapping regions should exist to perform the registration task.
+        The main drawback of this method is that overlapping regions are needed to perform the registration task.
 
-        Because of the increasing success of Deep Learning in 2D applications, there have been attempts to use deep neural networks
+        Due to the increasing success of Deep Learning in 2D applications, there have been attempts to use deep neural networks
         to solve the whole point cloud registration problem (global and local registration).
         DeepICP \cite{Lu_2019_deepicp} is the first end-to-end learning-based point cloud registration framework.
         DeepICP makes use of other networks to build a complete framework.
@@ -158,10 +160,10 @@
         Other approaches do not use a neural network to solve the whole point cloud registration problem but part of it.
         LORAX is an algorithm proposed in \cite{Elbaz_2017_3dpoint} that selects some sets of points called super-points and uses a low-dimensional descriptor 
         generated by an autoencoder to describe the structure of each super-point.
-        The sets of superpoints of both point clouds are then matched using the euclidean distance between the descriptors.
+        The sets of super-points from both point clouds are then matched using the euclidean distance between the descriptors.
         Finally, a coarse registration is computed using a RANSAC procedure, followed by a fine registration using ICP.
-        The main contribution of LORAX is the use of an autoencoder to extract features of 3D point clouds. 
-        Nevertheless, the implementation is not optimized for real-time performance, and it is not proved to be fast for big point clouds.
+        The main contribution of LORAX is the use of an autoencoder to extract features from 3D point clouds. 
+        Nevertheless, the implementation is not optimized for real-time performance, and it is not proved to be fast for large point clouds.
 
 %-------------------------------------------------------------------------------
 %	Point-to-model registration
@@ -250,7 +252,7 @@
 
     Windheuser et al. \cite{Windheuser_2011_largescale} propose the use of Integer Linear Programming to find correspondences between non-rigid 3D shapes.
     They use an Integer Linear Program to minimize the elastic thin-shell energy required to deform one shape into the other one.
-    Their method can be improved by a relaxation of the Integer Linear Program and by including feature descriptors.
+    Their method can be improved by a relaxation of the Integer Linear Program and the inclusion of feature descriptors.
 
 %-------------------------------------------------------------------------------
 %	Limitations of previous work
@@ -273,9 +275,9 @@
 
     In the last years, there has been a boom in the use of neural networks and deep neural networks to solve 2D problems.
     Therefore, their use in 3D tasks has been explored too.
-    Unfortunately, methods based on deep learning generally suffer from issues regarding the generalization ability and the requirement of massive training data \cite{Quan_2020_com}.
+    Unfortunately, methods based on deep learning generally suffer from issues regarding the generalization ability and the requirement of massive amounts of training data \cite{Quan_2020_com}.
 
-    In general, one thing that can be noticed is that none of these methods offers a straightforward solution for the coarse registration of a model with a point cloud.
+    In general, one thing that can be noticed is that none of these methods offer a straightforward solution for the coarse registration of a model with a point cloud.
     The only solution available for this is to sample a point cloud from the model and apply a global method for two point clouds.
     Unfortunately, this solution does not leverage the complete information contained in the model.
     However, some of the ideas of the approaches presented in this chapter can be used to implement alternative coarse registration methods of a point cloud with a CityGML model.
