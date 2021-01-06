@@ -8,9 +8,8 @@
     Fine registration algorithms attempt to refine an initial transformation that maps the source point cloud to the target point cloud.
     Some approaches combine both of these methods; they first apply a global method and then refine the results with the help of a local method. 
     We can classify these approaches into a third category called hybrid methods. 
-    \par
     
-    For the purpose of this work, we can also classify point cloud registration algorithms into two other major categories:
+    For the purpose of this work, we classify point cloud registration algorithms into two other major categories:
     point-to-point and point-to-model.
     Point-to-point registration algorithms attempt to align two point clouds, while point-to-model registration algorithms attempt to align a point cloud with a 3D model.
 
@@ -277,7 +276,7 @@
     Therefore, their use in 3D tasks has been explored too.
     Unfortunately, methods based on deep learning generally suffer from issues regarding the generalization ability and the requirement of massive amounts of training data \cite{Quan_2020_com}.
 
-    In general, one thing that can be noticed is that none of these methods offer a straightforward solution for the coarse registration of a model with a point cloud.
+    In general, none of these methods offer a straightforward solution for the coarse registration of a model with a point cloud.
     The only solution available for this is to sample a point cloud from the model and apply a global method for two point clouds.
     Unfortunately, this solution does not leverage the complete information contained in the model.
     However, some of the ideas of the approaches presented in this chapter can be used to implement alternative coarse registration methods of a point cloud with a CityGML model.

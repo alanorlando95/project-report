@@ -46,22 +46,6 @@
             \caption{CityGML model and its corresponding point cloud before registration.}
             \label{fig:initial_CityGML}
         \end{figure}
-        
-        
-
-        % \begin{figure}
-        %     \begin{subfigure}{0.49\textwidth}
-        %       \includegraphics[width=\linewidth]{images/solution_images/initial_back_model_zoom.png}
-        %       \caption{Model as mesh.} \label{fig:initial_back_zoom_a}
-        %     \end{subfigure}%
-        %     \hspace*{\fill}   % maximize separation between the subfigures
-        %     \begin{subfigure}{0.49\textwidth}
-        %       \includegraphics[width=\linewidth]{images/solution_images/initial_back_lines_zoom.png}
-        %       \caption{Edges of the model as set of points.} \label{fig:initial_back_zoom_b}
-        %     \end{subfigure}%
-        %     \hspace*{\fill}   % maximizeseparation between the subfigures
-        %   \caption{Zoom into the back view.} \label{fig:initial_back_zoom}
-        % \end{figure}
 
 %-------------------------------------------------------------------------------
 %	Setup
@@ -78,24 +62,25 @@
     \section{Registration Problem in 3D}
     \label{section:Registration Problem in 3D}
         In general, the registration task consists of finding the transformation that aligns the input CityGML model with the input point cloud.
-
-        More specifically, given a source point set $P = \{p_i\}_{i=1}^N$, where $p_i \in \mathbb {R}^{4}$,
-        and a target point set $Q = \{q_j\}_{j=1}^M$, where $q_j \in \mathbb {R}^{4}$,
-        the registration task consists of finding a transformation $T \in SE(3)$ that minimizes:
+        That means a transformation that modifies the point cloud’s pose to bring it close to the CityGML model or vice versa.
+        
+        More specifically, given a source point set $\pmb{P} = \{p_i\}_{i=1}^N$, where $p_i \in \mathbb {R}^{4}$,
+        and a target point set $\pmb{Q} = \{q_j\}_{j=1}^M$, where $q_j \in \mathbb {R}^{4}$,
+        the registration task consists of finding a transformation $\pmb{T} \in SE(3)$ that minimizes:
         \begin{equation}
             \label{eq:lossfunction}
-            \sum_{i = 1}^{N} \min_{j \in {1...M}} d( T p_i , q_j )    
+            \sum_{i = 1}^{N} \min_{j \in {1...M}} d( \pmb{T} p_i , q_j )    
         \end{equation}
           
-        where $d(T p_i, q_j)$ is the Euclidian distance between $T p_i$ and $q_j$.
-        The points $p_i$ and $q_j$ are points in homogeneous coordinates. Therefore, their fourth element is $1$.
+        where $d(\pmb{T} p_i, q_j)$ is the Euclidian distance between $\pmb{T} p_i$ and $q_j$.
+        The points $p_i$ and $q_j$ are points in homogeneous coordinates. Therefore, their fourth element is always one.
 
-        In this case, the point set $P$ corresponds to the point cloud, while the point set $Q$ corresponds to the CityGML model.
-        It is clear that $P$ is formed by the same points that form the point cloud, 
-        but the set $Q$ could be a sampled point cloud from the CityGML model
+        In this case, the point set $\pmb{P}$ corresponds to the point cloud, while the point set $\pmb{Q}$ corresponds to the CityGML model.
+        It is clear that $\pmb{P}$ is formed by the same points that form the point cloud, 
+        but the set $\pmb{Q}$ could be a sampled point cloud from the CityGML model
         or other characteristic points of the CityGML model.
         
-        The difficulty of this task is to find correspondences between $P$ and $Q$ that minimizes \autoref{eq:lossfunction}.
+        The difficulty of this task is to find correspondences between $\pmb{P}$ and $\pmb{Q}$ that minimizes \autoref{eq:lossfunction}.
         If the correspondences were defined, the registration would be pretty straightforward and correct.
 
 %-------------------------------------------------------------------------------
@@ -105,9 +90,11 @@
     \label{section:Registration Problem in 2D}
         To simplify the problem, one can transform the 3D registration problem into a 2D registration problem 
         by projecting the point cloud and the CityGML model onto the xy-plane.
+        Both projections can be imagined as an image representing the point cloud’s observation
+        or the CityGML model’s observation from the same point of view, for example, from above or below.
 
-        The registration problem in 2D remains the same as in 3D, but $p_i \in \mathbb{R}^{3}$, $q_j \in \mathbb {R}^{3}$, and $T \in SE(2)$.
-        Again, $p_i$ and $q_j$ are points in homogeneous coordinates and their third element is always $1$.
+        The registration problem in 2D remains the same as in 3D, but $p_i \in \mathbb{R}^{3}$, $q_j \in \mathbb {R}^{3}$, and $\pmb{T} \in SE(2)$.
+        As in the 3D registration problem, $p_i$ and $q_j$ are points in homogeneous coordinates. Therefore, their third element is always one.
 
 %-------------------------------------------------------------------------------
 %	Registration Problem as a Mixed Integer Linear Program
@@ -115,25 +102,25 @@
     \section{Registration Problem as a Mixed Integer Linear Program}
     \label{section:Registration Problem as Mixed Integer Linear Program}
         The 3D registration problem defined in \autoref{section:Registration Problem in 3D} can be redefined as a Mixed Integer Linear Program.
-        The exact definition is given in \cite{Sakakubara_2007_automatic}. Furthermore, the 2D registration problem defined in \autoref{section:Registration Problem in 2D}
+        The exact definition is given by Sakakubara et al. \cite{Sakakubara_2007_automatic}. Furthermore, the 2D registration problem defined in \autoref{section:Registration Problem in 2D}
         can be redefined as a Mixed Integer Linear Program in the same way.
         
-        There is a matrix $X \in \mathbb{R}^{N \times M}$ that represents the correspondences between $P$ and $Q$.
+        There is a matrix $\pmb{X} \in \mathbb{R}^{N \times M}$ that represents the correspondences between $\pmb{P}$ and $\pmb{Q}$.
         That means that $x_{ij} = 1$ if the point $p_i$ in the source image corresponds to the point $q_j$ in the target image, otherwise $x_{ij} = 0$.
 
-        Then, there should be a homogeneous transformation $T$ that transforms the point $p_i$ into the point $q_j$, for all $i, j$ where $x_{ij} = 1$.
-        That means there is loss function $L = (q_i - T p_i)$ that should be less than a given threshold $\epsilon_d$
+        Then, there should be a homogeneous transformation $\pmb{T}$ that transforms the point $p_i$ into the point $q_j$, for all $i, j$ where $x_{ij} = 1$.
+        That means there is a loss function $L = [l_0, l_1, l_2]^T = (q_i - \pmb{T} p_i)$ that should be less than a given threshold $\epsilon_d$
         for all $i, j$ where $x_{ij} = 1$. The constant $\epsilon_d$ can be seen as a threshold that removes outliers.
         In other words, $\epsilon_d$ is the maximum distance allowed between a target point and its corresponding source point after transformation.
 
-        More formally, the objective of the Mixed Integer Linear Program is to maximize
+        More formally, the objective of the Mixed Integer Linear Program is to maximize:
         
         \begin{equation}
             \label{eq:objective_original}
             \sum_{i}^{N} \sum_{j}^{M} x_{ij}    
         \end{equation}
         
-        subject to
+        subject to:
         
         \begin{equation}
             \label{eq:subject_sum_rows}
@@ -182,16 +169,25 @@
             \end{gathered}
         \end{equation}
         
+        \autoref{eq:subject_sum_rows} and \autoref{eq:subject_sum_columns} constraint the number of correspondences that a point can have to one,
+        i.e., a point $p_i$ can only correspond to one point $q_j$ and vice versa. 
+        The number on the equation’s right-hand side can be increased to allow multiple correspondences between points.
 
-        The constant $b$ is some large number. For example, $b$ can be two times the maximum distance between points of the source image
-        or points of the target image.
+        \autoref{eq:subject_transformation_0}, \autoref{eq:subject_transformation_negative_0}, 
+        \autoref{eq:subject_transformation_1}, and \autoref{eq:subject_transformation_negative_1} are the implementation of the loss function. 
+        If $x_{ij} = 1$, i.e., $p_i$ corresponds to $q_j$, then the equation’s right-hand side is $\epsilon_d$. 
+        On the contrary, if $x_{ij} = 0$, i.e., $p_i$ does not correspond to $q_j$, then the equation’s right-hand side is $\epsilon_d + b$.
+        To ensure that the pairs of points that do not correspond to each other comply with these constraints, the constant $b$ should be some large number. 
+        For example, $b$ can be two times the maximum distance between points of the source image or points of the target image. 
 
-        The \autoref{eq:subject_lines_preservation} is used to preserve lines between points after the transformation.
+        \autoref{eq:subject_lines_preservation} is used to preserve lines between points after the transformation.
         If $\mid d(p_i, p_k) - d(q_j, q_l) \mid \geq \epsilon_l$, then either $p_i$ corresponds to $q_j$ or $p_k$ corresponds to $q_l$.
         The constant $\epsilon_l$ depends on $\epsilon_d$ and according to \cite{Sakakubara_2007_automatic}, 
         $\epsilon_l \geq 2 \sqrt{3} \epsilon_d$ needs to be satisfied because $\epsilon_d$ is the allowed rigid transformation error.
 
-        The elements of $T$ are constrained in \autoref{eq:subject_transformation_variables},
-        but the rest of the elements are constant: $t_{31} = 0$, $t_{32} = 0$, and $t_{33} = 1$.
+        The elements of $\pmb{T}$ are constrained by lower ($\delta_1^-$, $\delta_2^-$, $t_x^-$, and $t_y^-$)
+        and upper ($\delta_1^+$, $\delta_2^+$, $t_x^+$, and $t_y^+$) boundaries
+        in \autoref{eq:subject_transformation_variables}. 
+        While the rest of the elements of $\pmb{T}$ are constant: $t_{31} = 0$, $t_{32} = 0$, and $t_{33} = 1$.
           
 \end{document}
