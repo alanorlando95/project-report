@@ -169,7 +169,7 @@
             \end{gathered}
         \end{equation}
         
-        \autoref{eq:subject_sum_rows} and \autoref{eq:subject_sum_columns} constraint the number of correspondences that a point can have to one,
+        \autoref{eq:subject_sum_rows} and \autoref{eq:subject_sum_columns} constraint to one the number of correspondences that a point can have,
         i.e., a point $p_i$ can only correspond to one point $q_j$ and vice versa. 
         The number on the equation’s right-hand side can be increased to allow multiple correspondences between points.
 
@@ -186,8 +186,9 @@
         $\epsilon_l \geq 2 \sqrt{3} \epsilon_d$ needs to be satisfied because $\epsilon_d$ is the allowed rigid transformation error.
 
         The elements of $\pmb{T}$ are constrained by lower ($\delta_1^-$, $\delta_2^-$, $t_x^-$, and $t_y^-$)
-        and upper ($\delta_1^+$, $\delta_2^+$, $t_x^+$, and $t_y^+$) boundaries
-        in \autoref{eq:subject_transformation_variables}. 
+        and upper ($\delta_1^+$, $\delta_2^+$, $t_x^+$, and $t_y^+$) boundaries in \autoref{eq:subject_transformation_variables}. 
         While the rest of the elements of $\pmb{T}$ are constant: $t_{31} = 0$, $t_{32} = 0$, and $t_{33} = 1$.
+        The last two constraints in \autoref{eq:subject_transformation_variables}, $t_{11} = t_{22}$ and $t_{21} = -t_{12}$,
+        ensure that the transformation is a similarity transformation.
           
 \end{document}
