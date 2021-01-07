@@ -123,7 +123,7 @@
         This generalization makes the algorithm more robust to outliers without modifying the simplicity. 
         However, it does not improve the speed of the original ICP.
 
-        ICP and its variants are still the standard algorithms for point cloud registration because of their simplicity. 
+        % ICP and its variants are still the standard algorithms for point cloud registration because of their simplicity. 
         % Nevertheless, to perform well they require a good initial approximation of the solution.
 
     %-------------------------------------------------------------------------------
@@ -136,7 +136,7 @@
 
         Go-ICP is a branch-and-bound (BnB) based approach proposed by Yang et al. \cite{Yang_2016_goicp} to address the susceptibility of ICP to local minima. 
         The main idea of Go-ICP is that BnB and ICP work iteratively until a global minimum is reached: BnB finds a solution, which is then refined by ICP.
-        Go-ICP guarantees global optimality regardless of the initialization, and it is recommended for scenarios where real-time performance is not critical.
+        According to the authors, Go-ICP guarantees global optimality regardless of the initialization, and it is recommended for scenarios where real-time performance is not critical.
 
         The approach proposed by Jun Lu et al. \cite{Lu_2019_4pcsicp} extracts keypoints from the point clouds, 
         then it obtains four optimal point correspondences from the key points by using Super4PCS \cite{Mellado_2014_super4pcs},
@@ -147,7 +147,7 @@
 
         Due to the increasing success of Deep Learning in 2D applications, there have been attempts to use deep neural networks
         to solve the whole point cloud registration problem (global and local registration).
-        DeepICP \cite{Lu_2019_deepicp} is the first end-to-end learning-based point cloud registration framework.
+        DeepICP \cite{Lu_2019_deepicp} is, according to its creators, the first end-to-end learning-based point cloud registration framework.
         DeepICP makes use of other networks to build a complete framework.
         The first step of DeepICP is the Deep Feature Extraction (PointNet++ \cite{Qi_2017_pointnet}), which extracts features from the point clouds.
         In the second step, the Pont Weighting (3DFeatNet \cite{Yew_2018_3dfeat}) selects the relevant points.
@@ -202,14 +202,14 @@
         The second modification is called ICP-DAF (ICP dynamic adjustment factor), and it aims to reduce the time of the ICP-STL method. 
         ICP-DAF adds a dynamic adjustment factor to adjust the transformation parameters dynamically.
         The disadvantage of this method is the same disadvantage present in the ICP algorithm, 
-        i.e., to perform well, it requires a good initial approximation of the solution.
+        i.e., to perform well, it requires a good initial approximation of the solution \cite{Sakakubara_2007_automatic}.
 
         In the specific case of CityGML, Goebbels et al. \cite{Goebbels_2019_icpcitygml} propose an extension of the well-known ICP
         to perform point-to-model registration based on point-to-plane registration.
         This approach only considers points on the perimeter of the buildings.
         The main contribution of this approach is the speed since point-to-model ICP is faster than the point-to-plane ICP.
         The CityGML models used, however, did not contain any terrain information.
-        Therefore, the ground plane is the lowest point of the building, and some walls might intersect with the real terrain, increasing the algorithm’s error.
+        Therefore, according to the authors, the ground plane is the lowest point of the building, and some walls might intersect with the real terrain, increasing the algorithm’s error.
         An additional disadvantage of this method is that it expects the point cloud to be coarsely registered with the model.
 
         Another approach by Goebbels et al. \cite{Goebbels_2018_alinear} explores the possibility of finding features that help to perform the registration.
@@ -258,10 +258,10 @@
 %-------------------------------------------------------------------------------
     \section{Limitations of previous work} 
 
-    ICP and its variants provide simple and easily-implemented iterative methods, but these algorithms can converge to false local optima.
+    ICP and its variants provide simple and easily-implemented iterative methods, but these algorithms can converge to false local optima \cite{Wang_2019_deepclosest}.
     Furthermore, they do not scale well with the number of points, and they are not differentiable. 
     Therefore they cannot be integrated into end-to-end deep learning pipelines \cite{Sarode_2019_oneframework}. 
-    Moreover, the principal disadvantage of these methods is that they require a good initial approximation to the solution to perform well.
+    Moreover, the principal disadvantage of these methods is that they require a good initial approximation to the solution to perform well \cite{Sakakubara_2007_automatic}.
     
     RANSAC and its variations cannot guarantee any global optimality in their final results \cite{Bazin_2013_abranchandbound}.
     According to \cite{Quan_2020_com}, RANSAC has two main issues. 
