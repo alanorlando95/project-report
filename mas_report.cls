@@ -561,6 +561,8 @@ Supervised by\par
         \fi
     \end{scope}
 }
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figures and zoom with subimages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \endinput
