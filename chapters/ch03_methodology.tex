@@ -109,7 +109,7 @@
         That means that $x_{ij} = 1$ if the point $p_i$ in the source image corresponds to the point $q_j$ in the target image, otherwise $x_{ij} = 0$.
 
         Then, there should be a homogeneous transformation $\pmb{T}$ that transforms the point $p_i$ into the point $q_j$, for all $i, j$ where $x_{ij} = 1$.
-        That means there is a loss function $L = [l_0, l_1, l_2]^T = (q_i - \pmb{T} p_i)$ that should be less than a given threshold $\epsilon_d$
+        That means there is a loss function $L = [l_0, l_1, l_2]^T = (q_j - \pmb{T} p_i)$ that should be less than a given threshold $\epsilon_d$
         for all $i, j$ where $x_{ij} = 1$. The constant $\epsilon_d$ can be seen as a threshold that removes outliers.
         In other words, $\epsilon_d$ is the maximum distance allowed between a target point and its corresponding source point after transformation.
 
